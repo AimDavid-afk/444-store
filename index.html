@@ -15,13 +15,10 @@
             --texto: #ffffff;
         }
 
-        .tema-morado { --acento: #a333ff; }
-
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             margin: 0; background-color: var(--fondo); color: var(--texto);
-            transition: 0.4s ease;
-            overflow-x: hidden;
+            transition: 0.4s ease; overflow-x: hidden;
         }
 
         header {
@@ -40,14 +37,6 @@
         }
         .nav-links a:hover { color: var(--acento); }
 
-        .user-profile { display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 30px; }
-        
-        #user-avatar {
-            width: 100px; height: 100px; border-radius: 50%;
-            border: 3px solid var(--acento); box-shadow: 0 0 25px rgba(163, 51, 255, 0.4);
-            object-fit: cover; display: none;
-        }
-
         .container { min-height: 85vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         
         .auth-card {
@@ -62,9 +51,13 @@
             display: flex; align-items: center; justify-content: center; gap: 12px;
             font-size: 1rem; transition: 0.3s;
         }
-        .btn-discord:hover { background: #4752c4; transform: translateY(-2px); }
 
-        /* Letras de productos no disponibles */
+        #user-avatar {
+            width: 100px; height: 100px; border-radius: 50%;
+            border: 3px solid var(--acento); box-shadow: 0 0 25px rgba(163, 51, 255, 0.4);
+            object-fit: cover; display: none; margin-bottom: 20px;
+        }
+
         .empty-msg {
             color: #222; font-size: 1.2rem; font-weight: 700; text-transform: uppercase;
             letter-spacing: 2px; margin-top: 50px; text-align: center; display: none;
@@ -75,24 +68,19 @@
             gap: 25px; width: 100%; max-width: 1150px; margin-top: 40px;
         }
 
-        #admin-icon { display: none; width: 28px; cursor: pointer; margin-left: 15px; transition: 0.4s; }
-        #admin-icon:hover { transform: rotate(90deg); filter: drop-shadow(0 0 5px var(--acento)); }
+        #admin-icon { display: none; width: 28px; cursor: pointer; margin-left: 15px; }
 
         .modal-admin {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: var(--tarjeta); padding: 35px; border-radius: 25px; 
             border: 2px solid var(--acento); z-index: 2000; width: 320px;
-            box-shadow: 0 0 100px rgba(0,0,0,0.8);
         }
-        .admin-input { 
-            width: 100%; padding: 12px; margin: 10px 0; background: #000; 
-            border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; 
-        }
+        .admin-input { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #333; color: white; border-radius: 8px; box-sizing: border-box; }
     </style>
 </head>
-<body id="main-body" onclick="iniciarMusica()">
+<body id="main-body">
 
-    <audio id="bg-music" loop>
+    <audio id="bg-music" loop preload="auto">
         <source src="https://cdn.discordapp.com/attachments/1493938564587585586/1493964987675316264/VOCE_NA_MIRA_-__Ultra_Slowed_.mp3?ex=69e0e2d1&is=69df9151&hm=3fd591a55285ab387fed97fa8d5c24fc8c45a66be1080cf16da8f2b068b7301a&" type="audio/mpeg">
     </audio>
 
@@ -105,23 +93,18 @@
         </div>
     </header>
 
-    <div class="container">
+    <div class="container" id="main-content" onclick="forceMusic()">
         <div id="auth-section">
             <div class="auth-card">
-                <h2 style="letter-spacing: 2px; margin-bottom: 10px;">444 SYSTEM</h2>
-                <p style="color: gray; margin-bottom: 30px; font-size: 0.9rem;">Vincula tu cuenta para entrar a la tienda</p>
-                <button class="btn-discord" onclick="loginDiscord()">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="20"> CONECTAR DISCORD
-                </button>
+                <h2 style="letter-spacing: 2px;">444 SYSTEM</h2>
+                <button class="btn-discord" onclick="loginDiscord()">CONECTAR DISCORD</button>
             </div>
         </div>
 
         <div id="welcome-screen" style="display:none; text-align: center;">
-            <div class="user-profile">
-                <img id="user-avatar" src="" alt="Avatar">
-                <h1 style="font-size: 3rem; margin:0;">BIENVENIDO, <span id="user-tag" style="color:var(--acento)"></span></h1>
-                <p style="opacity: 0.6; letter-spacing: 1px;">SISTEMA CARGADO CORRECTAMENTE 🎵</p>
-            </div>
+            <img id="user-avatar" src="">
+            <h1>BIENVENIDO, <span id="user-tag" style="color:var(--acento)"></span></h1>
+            <p id="music-status" style="font-size:0.7rem; color:gray;">Toca cualquier parte para activar el Phonk 🎵</p>
         </div>
 
         <section id="shop-section" style="display:none; width:100%;">
@@ -131,12 +114,12 @@
     </div>
 
     <div id="modalAdmin" class="modal-admin">
-        <h3 style="color:var(--acento); margin-top:0;">Añadir Producto</h3>
-        <input type="text" id="p-titulo" class="admin-input" placeholder="Nombre del Producto">
-        <input type="number" id="p-precio" class="admin-input" placeholder="Precio ($)">
-        <input type="text" id="p-img" class="admin-input" placeholder="URL de Imagen">
+        <h3>Admin Panel</h3>
+        <input type="text" id="p-titulo" class="admin-input" placeholder="Nombre">
+        <input type="number" id="p-precio" class="admin-input" placeholder="Precio">
+        <input type="text" id="p-img" class="admin-input" placeholder="URL Imagen">
         <button onclick="publicar()" style="width:100%; padding:12px; background:var(--acento); color:white; border:none; cursor:pointer; font-weight:bold; border-radius:8px;">PUBLICAR</button>
-        <button onclick="cerrarAdmin()" style="width:100%; background:none; color:gray; border:none; margin-top:15px; cursor:pointer; font-size: 0.8rem;">Cerrar Panel</button>
+        <button onclick="cerrarAdmin()" style="width:100%; background:none; color:gray; border:none; margin-top:10px; cursor:pointer;">Cerrar</button>
     </div>
 
     <script>
@@ -144,16 +127,11 @@
         const REDIRECT_URI = "https://AimDavid-afk.github.io/444-store/";
         const WEBHOOK_URL = "https://discord.com/api/webhooks/1494040311159193733/ekTKj4NBkrejsR2m4G7h3aj64yYVWFXmteloFzTp_62K5h_H973vFxdDhCku6TqbXn5d";
 
-        let musicaIniciada = false;
-
-        // Función para que la música suene al interactuar
-        function iniciarMusica() {
-            if (!musicaIniciada) {
-                const audio = document.getElementById('bg-music');
-                audio.volume = 0.3;
-                audio.play();
-                musicaIniciada = true;
-            }
+        // MÚSICA FIX
+        function forceMusic() {
+            const audio = document.getElementById('bg-music');
+            audio.play().catch(e => console.log("Esperando interacción..."));
+            document.getElementById('music-status').innerText = "Reproduciendo Phonk Ultra Slowed 🔊";
         }
 
         function loginDiscord() {
@@ -163,85 +141,59 @@
         window.onload = async () => {
             const params = new URLSearchParams(window.location.hash.slice(1));
             const token = params.get('access_token');
+            
             if (token) {
                 document.getElementById('auth-section').style.display = 'none';
                 document.getElementById('welcome-screen').style.display = 'block';
                 
-                const resp = await fetch('https://discord.com/api/users/@me', { headers: { Authorization: `Bearer ${token}` } });
-                const user = await resp.json();
-                
-                document.getElementById('user-tag').textContent = user.username.toUpperCase();
-                const avatarImg = document.getElementById('user-avatar');
-                const avatarUrl = user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256` : "https://cdn.discordapp.com/embed/avatars/0.png";
-                avatarImg.src = avatarUrl;
-                avatarImg.style.display = 'block';
-                document.getElementById('admin-icon').style.display = 'block';
+                try {
+                    const resp = await fetch('https://discord.com/api/users/@me', { headers: { Authorization: `Bearer ${token}` } });
+                    const user = await resp.json();
+                    
+                    document.getElementById('user-tag').textContent = user.username.toUpperCase();
+                    const avatarImg = document.getElementById('user-avatar');
+                    const urlFoto = user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : "https://cdn.discordapp.com/embed/avatars/0.png";
+                    avatarImg.src = urlFoto;
+                    avatarImg.style.display = 'block';
+                    document.getElementById('admin-icon').style.display = 'block';
 
-                // ENVIAR LOGS AL WEBHOOK DE DISCORD
-                enviarLogDiscord(user.username, user.id, avatarUrl);
+                    // LOGS FIX
+                    fetch(WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            embeds: [{
+                                title: "🚀 Usuario Logueado",
+                                description: `**${user.username}** acaba de entrar.`,
+                                color: 10695679,
+                                thumbnail: { url: urlFoto },
+                                footer: { text: `ID: ${user.id}` },
+                                timestamp: new Date()
+                            }]
+                        })
+                    }).catch(err => console.error("Webhook falló:", err));
+
+                } catch (e) { console.error(e); }
             }
         };
 
-        async function enviarLogDiscord(nombre, id, foto) {
-            const embed = {
-                title: "👤 Usuario Vinculado",
-                description: `El usuario **${nombre}** ha entrado a la tienda.`,
-                color: 10695679,
-                thumbnail: { url: foto },
-                fields: [
-                    { name: "Discord ID", value: id, inline: true },
-                    { name: "Plataforma", value: "Web Browser", inline: true }
-                ],
-                footer: { text: "444 Store Logs" },
-                timestamp: new Date()
-            };
-
-            fetch(WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ embeds: [embed] })
-            });
-        }
-
-        function irAInicio() {
-            document.getElementById('shop-section').style.display = 'none';
-            document.getElementById('welcome-screen').style.display = 'block';
-        }
-
-        function irAProductos() {
-            document.getElementById('welcome-screen').style.display = 'none';
-            document.getElementById('shop-section').style.display = 'block';
-            verificarProductos();
-        }
-
-        function verificarProductos() {
-            const lista = document.getElementById('lista-productos');
-            const mensaje = document.getElementById('no-products-msg');
-            mensaje.style.display = (lista.children.length === 0) ? 'block' : 'none';
-        }
-
+        function irAInicio() { document.getElementById('shop-section').style.display = 'none'; document.getElementById('welcome-screen').style.display = 'block'; }
+        function irAProductos() { document.getElementById('welcome-screen').style.display = 'none'; document.getElementById('shop-section').style.display = 'block'; verificarProductos(); }
+        function verificarProductos() { const lista = document.getElementById('lista-productos'); document.getElementById('no-products-msg').style.display = (lista.children.length === 0) ? 'block' : 'none'; }
+        function abrirAdmin() { document.getElementById('modalAdmin').style.display = 'block'; }
+        function cerrarAdmin() { document.getElementById('modalAdmin').style.display = 'none'; }
         function publicar() {
             const t = document.getElementById('p-titulo').value;
             const p = document.getElementById('p-precio').value;
             const i = document.getElementById('p-img').value;
-            if(!t || !p) return alert("Pon nombre y precio");
-
-            const lista = document.getElementById('lista-productos');
+            if(!t || !p) return;
             const card = document.createElement('div');
-            card.style.cssText = "background:var(--tarjeta); padding:20px; border-radius:20px; border:1px solid #1a1a1a; text-align:center; transition: 0.3s;";
-            card.innerHTML = `
-                <img src="${i}" style="width:100%; border-radius:12px; margin-bottom:15px;" onerror="this.src='https://via.placeholder.com/300x150/111/fff?text=444Store'">
-                <h3 style="margin:0; font-size: 1.2rem;">${t}</h3>
-                <p style="color:var(--acento); font-size:1.6rem; font-weight:bold; margin: 10px 0;">$${p}</p>
-                <button style="width:100%; padding:10px; border-radius:10px; border:none; background:var(--acento); color:white; cursor:pointer; font-weight:bold;">COMPRAR</button>
-            `;
-            lista.appendChild(card);
+            card.style.cssText = "background:var(--tarjeta); padding:20px; border-radius:15px; border:1px solid #1a1a1a; text-align:center;";
+            card.innerHTML = `<img src="${i}" style="width:100%; border-radius:10px;"><h3 style="margin:10px 0;">${t}</h3><p style="color:var(--acento); font-size:1.4rem;">$${p}</p><button style="width:100%; padding:8px; background:var(--acento); color:white; border:none; cursor:pointer; border-radius:5px;">COMPRAR</button>`;
+            document.getElementById('lista-productos').appendChild(card);
             cerrarAdmin();
             verificarProductos();
         }
-
-        function abrirAdmin() { document.getElementById('modalAdmin').style.display = 'block'; }
-        function cerrarAdmin() { document.getElementById('modalAdmin').style.display = 'none'; }
     </script>
 </body>
 </html>
