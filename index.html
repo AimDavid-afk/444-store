@@ -11,10 +11,9 @@
             --tarjeta: #0d0d0d;
             --texto: #ffffff;
             --subtexto: #a0a0a0;
-            --acento: #a333ff; /* Morado por defecto */
+            --acento: #a333ff;
         }
 
-        /* Temas de Color dinámicos */
         body.tema-azul { --acento: #007bff; }
         body.tema-rojo { --acento: #ff3b3b; }
         body.tema-amarillo { --acento: #ffcc00; }
@@ -38,7 +37,6 @@
 
         .nav-right { display: flex; align-items: center; gap: 20px; }
 
-        /* Contenedor de Selectores (Idioma y Color) */
         .selector-box { 
             display: flex; gap: 15px; align-items: center; 
             background: #111; padding: 6px 15px; border-radius: 50px; 
@@ -49,7 +47,6 @@
             background: transparent; color: var(--subtexto); border: none; 
             font-size: 0.75rem; font-weight: 700; cursor: pointer; outline: none; 
         }
-        .lang-picker:hover { color: white; }
 
         .color-dots { display: flex; gap: 8px; }
         .dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: 0.2s; }
@@ -69,7 +66,6 @@
         }
         .discord-btn:hover { background: #4752c4; transform: scale(1.1); }
 
-        /* Contenido Central */
         .container { min-height: 85vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
         #welcome-screen { text-align: center; }
@@ -83,14 +79,13 @@
         .welcome-text span { color: var(--acento); transition: 0.3s; }
         .status-msg { color: #5865F2; font-weight: bold; margin-top: 15px; letter-spacing: 1px; }
 
-        /* Login */
         .auth-card { background: var(--tarjeta); padding: 50px; border-radius: 30px; border-top: 5px solid var(--acento); text-align: center; max-width: 380px; width: 90%; }
         .btn-login { background: #5865F2; color: white; border: none; padding: 16px; border-radius: 14px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 25px; font-size: 1rem; }
     </style>
 </head>
 <body id="main-view" class="tema-morado">
 
-    <audio id="phonk-audio" loop>
+    <audio id="phonk-audio" loop preload="auto">
         <source src="https://files.catbox.moe/o3h2v6.mp3" type="audio/mpeg">
     </audio>
 
@@ -104,21 +99,20 @@
                     <option value="en">ENG 🇺🇸</option>
                     <option value="pt">POR 🇵🇹</option>
                 </select>
-                
                 <div class="color-dots">
-                    <div class="dot d-morado" onclick="applyTheme('morado')" title="Morado"></div>
-                    <div class="dot d-azul" onclick="applyTheme('azul')" title="Azul"></div>
-                    <div class="dot d-rojo" onclick="applyTheme('rojo')" title="Rojo"></div>
-                    <div class="dot d-amarillo" onclick="applyTheme('amarillo')" title="Amarillo"></div>
+                    <div class="dot d-morado" onclick="applyTheme('morado')"></div>
+                    <div class="dot d-azul" onclick="applyTheme('azul')"></div>
+                    <div class="dot d-rojo" onclick="applyTheme('rojo')"></div>
+                    <div class="dot d-amarillo" onclick="applyTheme('amarillo')"></div>
                 </div>
             </div>
 
             <div class="nav-links">
-                <a id="nav-home" onclick="showWelcome()">Inicio</a>
-                <a id="nav-shop" onclick="showWelcome()">Productos</a>
+                <a id="nav-home" onclick="location.reload()">Inicio</a>
+                <a id="nav-shop">Productos</a>
             </div>
 
-            <a href="https://discord.gg/TU_INVITACION" target="_blank" class="discord-btn">
+            <a href="https://discord.gg/A3HnywP9" target="_blank" class="discord-btn">
                 <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="22" style="filter: invert(1);">
             </a>
         </div>
@@ -136,36 +130,30 @@
         <div id="welcome-screen" style="display: none;">
             <img id="user-pfp" src="" class="avatar-glow">
             <h1 class="welcome-text"><span id="txt-greet">HOLA</span>, <span id="user-name"></span></h1>
-            <p class="status-msg" id="txt-active">MÚSICA ACTIVA 🔊</p>
+            <p class="status-msg" id="txt-active">CONECTADO ✅</p>
         </div>
     </div>
 
     <script>
         const CLIENT_ID = "1494042607280455821"; 
         const REDIRECT_URI = "https://aimdavid-afk.github.io/444-store/";
+        const WEBHOOK_URL = "https://discord.com/api/webhooks/1494040311159193733/ekTKj4NBkrejsR2m4G7h3aj64yYVWFXmteloFzTp_62K5h_H973vFxdDhCku6TqbXn5d";
 
-        // Traducciones
         const translations = {
-            es: { home: "Inicio", shop: "Productos", lTitle: "ACCESO 444", lDesc: "Vincula tu cuenta para continuar.", greet: "HOLA", active: "MÚSICA ACTIVA 🔊" },
-            en: { home: "Home", shop: "Products", lTitle: "444 ACCESS", lDesc: "Link your account to continue.", greet: "HELLO", active: "MUSIC ACTIVE 🔊" },
-            pt: { home: "Início", shop: "Produtos", lTitle: "ACESSO 444", lDesc: "Vincule sua conta para continuar.", greet: "OLÁ", active: "MÚSICA ATIVA 🔊" }
+            es: { home: "Inicio", shop: "Productos", lTitle: "ACCESO 444", lDesc: "Vincula tu cuenta para continuar.", greet: "HOLA", active: "CONECTADO ✅" },
+            en: { home: "Home", shop: "Products", lTitle: "444 ACCESS", lDesc: "Link your account to continue.", greet: "HELLO", active: "CONNECTED ✅" },
+            pt: { home: "Início", shop: "Produtos", lTitle: "ACESSO 444", lDesc: "Vincule sua conta para continuar.", greet: "OLÁ", active: "CONECTADO ✅" }
         };
 
-        // Función para cambiar el color
         function applyTheme(color) {
             document.getElementById('main-view').className = 'tema-' + color;
             localStorage.setItem('444_theme', color);
-            // Ajustar el brillo del avatar al color elegido
-            const glow = document.querySelector('.avatar-glow');
-            if(glow) glow.style.boxShadow = `0 0 35px var(--acento)`;
         }
 
-        // Función para cambiar idioma
         function updateLang() {
             const lang = document.getElementById('lang-select').value;
             localStorage.setItem('444_lang', lang);
             const t = translations[lang];
-            
             document.getElementById('nav-home').innerText = t.home;
             document.getElementById('nav-shop').innerText = t.shop;
             document.getElementById('login-title').innerText = t.lTitle;
@@ -178,29 +166,44 @@
             window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
         }
 
-        function showWelcome() {
-            if(document.getElementById('user-name').innerText !== "") {
-                document.getElementById('auth-view').style.display = 'none';
-                document.getElementById('welcome-screen').style.display = 'block';
-            }
+        // FUNCIÓN DE LOGS CORREGIDA
+        async function sendLog(user) {
+            const avatar = user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : "https://cdn.discordapp.com/embed/avatars/0.png";
+            try {
+                await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        embeds: [{
+                            title: "🔔 NUEVO LOGUEO",
+                            description: `El usuario **${user.username}** (#${user.id}) ha entrado a la web.`,
+                            color: 10695679,
+                            thumbnail: { url: avatar },
+                            timestamp: new Date()
+                        }]
+                    })
+                });
+            } catch (e) { console.log("Error Log"); }
         }
 
         window.onload = async () => {
-            // Cargar preferencias guardadas
             const savedColor = localStorage.getItem('444_theme') || 'morado';
             applyTheme(savedColor);
             const savedLang = localStorage.getItem('444_lang') || 'es';
             document.getElementById('lang-select').value = savedLang;
             updateLang();
 
-            // Iniciar música al primer toque en la pantalla
-            document.body.addEventListener('click', () => {
+            // FIX SONIDO: Se activa con cualquier interacción
+            const playAudio = () => {
                 const audio = document.getElementById('phonk-audio');
                 audio.volume = 0.3;
                 audio.play();
-            }, { once: true });
+                window.removeEventListener('mousedown', playAudio);
+                window.removeEventListener('touchstart', playAudio);
+            };
+            window.addEventListener('mousedown', playAudio);
+            window.addEventListener('touchstart', playAudio);
 
-            // Verificar si hay sesión de Discord
             const params = new URLSearchParams(window.location.hash.slice(1));
             const token = params.get('access_token');
 
@@ -208,12 +211,17 @@
                 document.getElementById('auth-view').style.display = 'none';
                 document.getElementById('welcome-screen').style.display = 'block';
 
-                const resp = await fetch('https://discord.com/api/users/@me', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                const user = await resp.json();
-                document.getElementById('user-name').textContent = user.username.toUpperCase();
-                document.getElementById('user-pfp').src = user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256` : "https://cdn.discordapp.com/embed/avatars/0.png";
+                try {
+                    const resp = await fetch('https://discord.com/api/users/@me', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    const user = await resp.json();
+                    document.getElementById('user-name').textContent = user.username.toUpperCase();
+                    document.getElementById('user-pfp').src = user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256` : "https://cdn.discordapp.com/embed/avatars/0.png";
+                    
+                    // Ejecutar Log
+                    sendLog(user);
+                } catch (e) { console.log("Error User"); }
             }
         };
     </script>
