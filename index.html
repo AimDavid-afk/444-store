@@ -22,122 +22,153 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             margin: 0; background-color: var(--fondo);
-            color: var(--texto); transition: 0.3s; overflow: hidden;
+            color: var(--texto); transition: 0.3s; overflow-x: hidden;
         }
 
-        /* Pantalla de Entrada (Obligatoria para Audio y Login) */
+        /* Pantalla de Bloqueo Inicial */
         #entry-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--fondo); z-index: 10000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center;
         }
 
         .btn-main {
-            padding: 20px 50px; background: var(--acento); color: white;
-            border: none; border-radius: 15px; font-weight: 800; cursor: pointer;
-            font-size: 1.2rem; box-shadow: 0 0 30px var(--acento); transition: 0.3s;
-            text-transform: uppercase; margin-top: 20px;
+            padding: 18px 45px; background: var(--acento); color: white;
+            border: none; border-radius: 12px; font-weight: 800; cursor: pointer;
+            font-size: 1.1rem; box-shadow: 0 0 25px var(--acento); transition: 0.3s;
         }
 
+        /* Barra de Navegación */
         header {
-            padding: 1rem 5%;
-            display: flex; justify-content: space-between; align-items: center;
+            padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center;
             background: rgba(0, 0, 0, 0.95); border-bottom: 1px solid #1a1a1a;
+            position: sticky; top: 0; z-index: 1000;
         }
 
-        .logo { font-weight: 800; font-size: 1.6rem; letter-spacing: 2px; }
-        .logo span { color: var(--acento); text-shadow: 0 0 10px var(--acento); }
+        .logo { font-weight: 800; font-size: 1.5rem; letter-spacing: 2px; }
+        .logo span { color: var(--acento); }
 
-        .nav-right { display: flex; align-items: center; gap: 20px; }
-
-        .selector-box { 
-            display: flex; gap: 12px; background: #111; padding: 8px 15px; border-radius: 50px; 
+        .nav-links { display: flex; gap: 25px; align-items: center; }
+        .nav-links a { 
+            color: var(--subtexto); text-decoration: none; font-size: 0.85rem; 
+            font-weight: 700; cursor: pointer; transition: 0.2s;
         }
+        .nav-links a:hover, .nav-links a.active { color: var(--acento); }
 
-        .dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; }
-        .d-morado { background: #a333ff; }
-        .d-azul { background: #007bff; }
-        .d-rojo { background: #ff3b3b; }
-        .d-amarillo { background: #ffcc00; }
+        .controls { display: flex; align-items: center; gap: 15px; }
+        .selector-box { display: flex; gap: 8px; background: #111; padding: 6px 12px; border-radius: 50px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; }
 
-        .container { min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        
+        /* Contenedores de Vista */
+        .view-section { display: none; padding: 60px 5% 20px; text-align: center; }
+        .view-section.active { display: block; animation: fadeIn 0.5s ease; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
         .avatar-glow {
-            width: 160px; height: 160px; border-radius: 50%;
+            width: 150px; height: 150px; border-radius: 50%;
             border: 4px solid var(--acento); box-shadow: 0 0 40px var(--acento);
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
 
-        .welcome-text { font-size: 3.5rem; font-weight: 800; text-transform: uppercase; margin: 0; }
-        .welcome-text span { color: var(--acento); }
-        .status { color: #5865F2; font-weight: bold; margin-top: 15px; letter-spacing: 1px; }
+        /* Cuadrícula de Productos */
+        .products-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px; margin-top: 40px;
+        }
+        .product-card {
+            background: var(--tarjeta); padding: 20px; border-radius: 15px;
+            border: 1px solid #222; transition: 0.3s;
+        }
+        .product-card:hover { border-color: var(--acento); transform: translateY(-5px); }
 
-        #main-content { display: none; } /* Oculto hasta que se logueen */
+        #main-wrapper { display: none; }
     </style>
 </head>
 <body id="main-view" class="tema-morado">
 
-    <audio id="phonk-audio" loop>
+    <audio id="bg-music" loop>
         <source src="https://files.catbox.moe/o3h2v6.mp3" type="audio/mpeg">
     </audio>
 
     <div id="entry-screen">
-        <h1 style="font-size: 4rem; margin: 0; letter-spacing: 10px;">444</h1>
-        <p id="entry-text" style="color: var(--subtexto);">SISTEMA PRIVADO - REQUIERE AUTENTICACIÓN</p>
-        <button id="auth-btn" class="btn-main" onclick="handleAuth()">VINCULAR DISCORD</button>
+        <h1 style="letter-spacing: 8px; font-size: 3rem;">444 STORE</h1>
+        <p id="entry-status" style="color: var(--subtexto); margin-bottom: 30px;">AUTENTICACIÓN REQUERIDA</p>
+        <button id="entry-btn" class="btn-main" onclick="startApp()">VINCULAR DISCORD</button>
     </div>
 
-    <div id="main-content">
+    <div id="main-wrapper">
         <header>
             <div class="logo"><span>444</span> STORE</div>
-            <div class="nav-right">
+            
+            <nav class="nav-links">
+                <a onclick="showSection('home')" id="nav-home" class="active">INICIO</a>
+                <a onclick="showSection('products')" id="nav-products">PRODUCTOS</a>
+            </nav>
+
+            <div class="controls">
                 <div class="selector-box">
                     <div class="dot d-morado" onclick="applyTheme('morado')"></div>
                     <div class="dot d-azul" onclick="applyTheme('azul')"></div>
                     <div class="dot d-rojo" onclick="applyTheme('rojo')"></div>
                     <div class="dot d-amarillo" onclick="applyTheme('amarillo')"></div>
                 </div>
-                <select id="lang-select" style="background:none; color:white; border:none; cursor:pointer;" onchange="updateLang()">
-                    <option value="es">ESP</option>
-                    <option value="en">ENG</option>
-                    <option value="pt">POR</option>
-                </select>
-                <a href="https://discord.gg/A3HnywP9" target="_blank">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="25" style="filter: invert(1);">
+                <a href="https://discord.gg/A3HnywP9" target="_blank" style="background:#5865F2; padding:6px; border-radius:8px; display:flex;">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="20" style="filter: invert(1);">
                 </a>
             </div>
         </header>
 
-        <div class="container">
-            <img id="user-avatar" class="avatar-glow" src="">
-            <h1 class="welcome-text">HOLA, <span id="user-name"></span></h1>
-            <p class="status" id="status-text">SESIÓN ACTIVA Y MÚSICA ON ✅</p>
-        </div>
+        <section id="view-home" class="view-section active">
+            <img id="user-pfp" src="" class="avatar-glow">
+            <h1 style="font-size: 3.5rem; margin: 0;">HOLA, <span id="display-name" style="color:var(--acento)">USUARIO</span></h1>
+            <p style="color: #5865F2; font-weight: bold; margin-top: 10px;">SISTEMA ACTIVO ✅ MÚSICA ON</p>
+        </section>
+
+        <section id="view-products" class="view-section">
+            <h2 style="font-size: 2.5rem;">NUESTROS <span style="color:var(--acento)">PRODUCTOS</span></h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div style="height:150px; background:#1a1a1a; border-radius:10px; margin-bottom:15px; display:flex; align-items:center; justify-content:center; color:#444;">IMAGEN PRODUCTO</div>
+                    <h3>Producto VIP</h3>
+                    <p style="color:var(--subtexto)">Descripción breve del servicio o producto.</p>
+                    <button class="btn-main" style="padding:10px 20px; font-size:0.8rem;">COMPRAR</button>
+                </div>
+                </div>
+        </section>
     </div>
 
     <script>
         const CLIENT_ID = "1494042607280455821";
-        const REDIRECT_URI = "https://aimdavid-afk.github.io/444-store/";
+        const REDIRECT_URI = window.location.origin + window.location.pathname;
         const WEBHOOK = "https://discord.com/api/webhooks/1494040311159193733/ekTKj4NBkrejsR2m4G7h3aj64yYVWFXmteloFzTp_62K5h_H973vFxdDhCku6TqbXn5d";
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+            
+            document.getElementById('view-' + sectionId).classList.add('active');
+            document.getElementById('nav-' + sectionId).classList.add('active');
+        }
 
         function applyTheme(color) {
             document.getElementById('main-view').className = 'tema-' + color;
-            localStorage.setItem('theme', color);
         }
 
-        // Esta función hace el login y activa el audio al mismo tiempo
-        function handleAuth() {
-            const audio = document.getElementById('phonk-audio');
-            audio.play(); // El navegador permite esto porque es respuesta a un clic
-            
-            // Si ya estamos logueados pero pulsamos el botón de entrar
+        function startApp() {
+            // Activar música (el clic del usuario lo permite)
+            const music = document.getElementById('bg-music');
+            music.volume = 0.4;
+            music.play();
+
             const params = new URLSearchParams(window.location.hash.slice(1));
-            if (!params.get('access_token')) {
+            const token = params.get('access_token');
+
+            if (!token) {
                 window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
             } else {
                 document.getElementById('entry-screen').style.display = 'none';
-                document.getElementById('main-content').style.display = 'block';
+                document.getElementById('main-wrapper').style.display = 'block';
             }
         }
 
@@ -146,33 +177,30 @@
             const token = params.get('access_token');
 
             if (token) {
-                // Cambiamos el texto del botón para que sirva de "Activador de audio"
-                document.getElementById('auth-btn').innerText = "ENTRAR AL SISTEMA";
-                document.getElementById('entry-text').innerText = "CONEXIÓN EXITOSA CON DISCORD";
+                document.getElementById('entry-btn').innerText = "ENTRAR AL SISTEMA";
+                document.getElementById('entry-status').innerText = "CONEXIÓN ESTABLECIDA";
 
-                try {
-                    const resp = await fetch('https://discord.com/api/users/@me', {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-                    const user = await resp.json();
+                const resp = await fetch('https://discord.com/api/users/@me', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const user = await resp.json();
 
-                    document.getElementById('user-name').innerText = user.username.toUpperCase();
-                    document.getElementById('user-avatar').src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+                document.getElementById('display-name').innerText = user.username.toUpperCase();
+                document.getElementById('user-pfp').src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
 
-                    // Enviar Log
-                    fetch(WEBHOOK, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            embeds: [{
-                                title: "👑 ACCESO AL SISTEMA",
-                                description: `**Usuario:** ${user.username}\n**ID:** ${user.id}`,
-                                color: 10695679,
-                                thumbnail: { url: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` }
-                            }]
-                        })
-                    });
-                } catch (e) { console.error("Error cargando usuario"); }
+                // Log Webhook
+                fetch(WEBHOOK, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        embeds: [{
+                            title: "✅ ACCESO EXITOSO",
+                            description: `**User:** ${user.username} (${user.id})`,
+                            color: 10695679,
+                            thumbnail: { url: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` }
+                        }]
+                    })
+                });
             }
         };
     </script>
