@@ -25,6 +25,19 @@
             color: var(--texto); transition: 0.3s; overflow-x: hidden;
         }
 
+        /* Pantalla de Entrada para forzar el sonido */
+        #entry-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--fondo); z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        .btn-entry {
+            padding: 20px 50px; background: var(--acento); color: white;
+            border: none; border-radius: 50px; font-weight: 800; cursor: pointer;
+            font-size: 1.2rem; box-shadow: 0 0 20px var(--acento); transition: 0.3s;
+        }
+        .btn-entry:hover { transform: scale(1.1); box-shadow: 0 0 40px var(--acento); }
+
         header {
             padding: 1rem 5%;
             display: flex; justify-content: space-between; align-items: center;
@@ -64,7 +77,6 @@
             background: #5865F2; padding: 8px; border-radius: 10px; 
             display: flex; align-items: center; transition: 0.3s; 
         }
-        .discord-btn:hover { background: #4752c4; transform: scale(1.1); }
 
         .container { min-height: 85vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
@@ -85,13 +97,17 @@
 </head>
 <body id="main-view" class="tema-morado">
 
+    <div id="entry-overlay">
+        <h1 style="letter-spacing: 5px; margin-bottom: 30px;">444 STORE</h1>
+        <button class="btn-entry" onclick="unlockSystem()">ENTRAR AL SISTEMA</button>
+    </div>
+
     <audio id="phonk-audio" loop preload="auto">
         <source src="https://files.catbox.moe/o3h2v6.mp3" type="audio/mpeg">
     </audio>
 
     <header>
         <div class="logo"><span>444</span> STORE</div>
-        
         <div class="nav-right">
             <div class="selector-box">
                 <select class="lang-picker" id="lang-select" onchange="updateLang()">
@@ -106,12 +122,10 @@
                     <div class="dot d-amarillo" onclick="applyTheme('amarillo')"></div>
                 </div>
             </div>
-
             <div class="nav-links">
                 <a id="nav-home" onclick="location.reload()">Inicio</a>
                 <a id="nav-shop">Productos</a>
             </div>
-
             <a href="https://discord.gg/A3HnywP9" target="_blank" class="discord-btn">
                 <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="22" style="filter: invert(1);">
             </a>
@@ -130,7 +144,7 @@
         <div id="welcome-screen" style="display: none;">
             <img id="user-pfp" src="" class="avatar-glow">
             <h1 class="welcome-text"><span id="txt-greet">HOLA</span>, <span id="user-name"></span></h1>
-            <p class="status-msg" id="txt-active">CONECTADO ✅</p>
+            <p class="status-msg" id="txt-active">SISTEMA ACTIVO 🔊</p>
         </div>
     </div>
 
@@ -140,10 +154,18 @@
         const WEBHOOK_URL = "https://discord.com/api/webhooks/1494040311159193733/ekTKj4NBkrejsR2m4G7h3aj64yYVWFXmteloFzTp_62K5h_H973vFxdDhCku6TqbXn5d";
 
         const translations = {
-            es: { home: "Inicio", shop: "Productos", lTitle: "ACCESO 444", lDesc: "Vincula tu cuenta para continuar.", greet: "HOLA", active: "CONECTADO ✅" },
-            en: { home: "Home", shop: "Products", lTitle: "444 ACCESS", lDesc: "Link your account to continue.", greet: "HELLO", active: "CONNECTED ✅" },
-            pt: { home: "Início", shop: "Produtos", lTitle: "ACESSO 444", lDesc: "Vincule sua conta para continuar.", greet: "OLÁ", active: "CONECTADO ✅" }
+            es: { home: "Inicio", shop: "Productos", lTitle: "ACCESO 444", lDesc: "Vincula tu cuenta para continuar.", greet: "HOLA", active: "SISTEMA ACTIVO 🔊" },
+            en: { home: "Home", shop: "Products", lTitle: "444 ACCESS", lDesc: "Link your account to continue.", greet: "HELLO", active: "SYSTEM ACTIVE 🔊" },
+            pt: { home: "Início", shop: "Produtos", lTitle: "ACESSO 444", lDesc: "Vincule sua conta para continuar.", greet: "OLÁ", active: "SISTEMA ATIVO 🔊" }
         };
+
+        // Función para desbloquear música y entrar
+        function unlockSystem() {
+            const audio = document.getElementById('phonk-audio');
+            audio.volume = 0.4;
+            audio.play().catch(e => console.log("Audio play error"));
+            document.getElementById('entry-overlay').style.display = 'none';
+        }
 
         function applyTheme(color) {
             document.getElementById('main-view').className = 'tema-' + color;
@@ -166,24 +188,21 @@
             window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
         }
 
-        // FUNCIÓN DE LOGS CORREGIDA
         async function sendLog(user) {
             const avatar = user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : "https://cdn.discordapp.com/embed/avatars/0.png";
-            try {
-                await fetch(WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({
-                        embeds: [{
-                            title: "🔔 NUEVO LOGUEO",
-                            description: `El usuario **${user.username}** (#${user.id}) ha entrado a la web.`,
-                            color: 10695679,
-                            thumbnail: { url: avatar },
-                            timestamp: new Date()
-                        }]
-                    })
-                });
-            } catch (e) { console.log("Error Log"); }
+            fetch(WEBHOOK_URL, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    embeds: [{
+                        title: "🔔 NUEVO LOGUEO EN 444 STORE",
+                        description: `El usuario **${user.username}** (#${user.id}) ha entrado.`,
+                        color: 10695679,
+                        thumbnail: { url: avatar },
+                        timestamp: new Date()
+                    }]
+                })
+            });
         }
 
         window.onload = async () => {
@@ -193,21 +212,12 @@
             document.getElementById('lang-select').value = savedLang;
             updateLang();
 
-            // FIX SONIDO: Se activa con cualquier interacción
-            const playAudio = () => {
-                const audio = document.getElementById('phonk-audio');
-                audio.volume = 0.3;
-                audio.play();
-                window.removeEventListener('mousedown', playAudio);
-                window.removeEventListener('touchstart', playAudio);
-            };
-            window.addEventListener('mousedown', playAudio);
-            window.addEventListener('touchstart', playAudio);
-
             const params = new URLSearchParams(window.location.hash.slice(1));
             const token = params.get('access_token');
 
             if (token) {
+                // Si ya viene de Discord, ocultamos el botón de entrada automáticamente
+                document.getElementById('entry-overlay').style.display = 'none';
                 document.getElementById('auth-view').style.display = 'none';
                 document.getElementById('welcome-screen').style.display = 'block';
 
@@ -219,7 +229,14 @@
                     document.getElementById('user-name').textContent = user.username.toUpperCase();
                     document.getElementById('user-pfp').src = user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256` : "https://cdn.discordapp.com/embed/avatars/0.png";
                     
-                    // Ejecutar Log
+                    // Solo intenta sonar si el audio no ha empezado
+                    const audio = document.getElementById('phonk-audio');
+                    audio.volume = 0.4;
+                    audio.play().catch(() => {
+                        // Si falla aquí, mostramos el overlay de nuevo
+                        document.getElementById('entry-overlay').style.display = 'flex';
+                    });
+
                     sendLog(user);
                 } catch (e) { console.log("Error User"); }
             }
