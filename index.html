@@ -3,155 +3,405 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>444 Store | Official</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <title>444 Store | Sistema</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        :root { --fondo: #050505; --tarjeta: #0d0d0d; --acento: #a333ff; --texto: #ffffff; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; background-color: var(--fondo); color: var(--texto); overflow-x: hidden; }
-        
-        /* Pantalla de Inicio */
-        #musica-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: var(--fondo); z-index: 9999; display: flex; 
-            flex-direction: column; align-items: center; justify-content: center;
+        /* VARIABLES DE DISEÑO (Colores base) */
+        :root {
+            --fondo: #050505;
+            --tarjeta: #0d0d0d;
+            --texto: #ffffff;
+            --subtexto: #a0a0a0;
+            --acento: #a333ff; /* Morado por defecto */
+        }
+
+        /* TEMAS DE COLOR */
+        .tema-morado { --acento: #a333ff; }
+        .tema-azul { --acento: #007bff; }
+        .tema-rojo { --acento: #ff3b3b; }
+        .tema-amarillo { --acento: #ffcc00; }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            margin: 0; padding: 0;
+            background-color: var(--fondo);
+            color: var(--texto);
+            transition: all 0.4s ease; /* Transición suave al cambiar color */
+            overflow-x: hidden;
+        }
+
+        /* BARRA DE NAVEGACIÓN (HEADER) */
+        header {
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.95);
+            border-bottom: 1px solid #1a1a1a;
+            position: sticky; top: 0; z-index: 1000;
+        }
+
+        .logo {
+            font-weight: 800; font-size: 1.6rem; letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .logo span {
+            color: var(--acento);
+            text-shadow: 0 0 10px var(--acento);
+            transition: 0.3s;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .nav-links {
+            display: flex; gap: 20px;
+        }
+        .nav-links a {
+            color: var(--subtexto);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .nav-links a:hover {
+            color: var(--acento);
+        }
+
+        /* SELECTOR DE IDIOMAS */
+        .lang-picker select {
+            background: #111;
+            color: var(--subtexto);
+            border: 1px solid #333;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            outline: none;
+        }
+        .lang-picker select:hover { border-color: var(--acento); color: white;}
+
+        /* SELECTOR DE COLORES (PUNTOS) */
+        .color-picker {
+            display: flex; gap: 10px;
+        }
+        .color-dot {
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #222;
+            transition: 0.2s;
+        }
+        .color-dot:hover { transform: scale(1.2); }
+        .dot-morado { background: #a333ff; }
+        .dot-azul { background: #007bff; }
+        .dot-rojo { background: #ff3b3b; }
+        .dot-amarillo { background: #ffcc00; }
+
+        /* ICONO DE DISCORD */
+        .discord-icon {
+            width: 26px; height: 26px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .discord-icon:hover {
+            filter: drop-shadow(0 0 8px #5865F2);
+            transform: translateY(-2px);
+        }
+
+        /* CONTENEDOR PRINCIPAL */
+        .container {
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* TARJETA DE LOGIN */
+        .auth-card {
+            background: var(--tarjeta);
+            padding: 50px;
+            border-radius: 30px;
+            border-top: 5px solid var(--acento);
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
+            max-width: 400px; width: 100%;
+        }
+
+        .btn-discord {
+            background: #5865F2;
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: 14px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+        }
+        .btn-discord:hover {
+            background: #4752c4;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(88, 101, 242, 0.4);
+        }
+
+        /* PANTALLA DE BIENVENIDA (TU DISEÑO ACTUAL) */
+        #welcome-screen {
             text-align: center;
         }
-        .btn-entrar {
-            padding: 20px 45px; background: var(--acento); color: white; 
-            border: none; border-radius: 50px; font-weight: bold; cursor: pointer;
-            box-shadow: 0 0 20px var(--acento); transition: 0.3s; font-size: 1.2rem;
+        .avatar-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 25px;
+        }
+        .avatar-glow {
+            width: 130px; height: 130px;
+            border-radius: 50%;
+            border: 4px solid var(--acento);
+            object-fit: cover;
+            box-shadow: 0 0 30px rgba(163, 51, 255, 0.6);
+            transition: box-shadow 0.4s ease;
+        }
+        h1.welcome-text {
+            font-size: 3.5rem; font-weight: 800; margin: 0;
             text-transform: uppercase; letter-spacing: 2px;
         }
+        h1.welcome-text span {
+            color: var(--acento);
+        }
+        .status-text {
+            color: #44eb44; /* Verde neón */
+            font-weight: bold;
+            font-size: 1rem;
+            margin-top: 10px;
+            text-shadow: 0 0 10px rgba(68, 235, 68, 0.5);
+        }
 
-        header { padding: 0.8rem 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.95); border-bottom: 1px solid #1a1a1a; position: sticky; top: 0; z-index: 1000; }
-        .logo { font-weight: 700; font-size: 1.5rem; letter-spacing: 2px; }
-        .logo span { color: var(--acento); text-shadow: 0 0 10px var(--acento); }
-        .nav-links { display: flex; gap: 20px; align-items: center; }
-        .nav-links a { color: #a0a0a0; text-decoration: none; font-size: 0.8rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
-        
-        .container { min-height: 85vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        .auth-card { background: var(--tarjeta); padding: 45px; border-radius: 30px; border-top: 5px solid var(--acento); width: 100%; max-width: 380px; text-align: center; }
-        .btn-discord { background: #5865F2; color: white; border: none; width: 100%; padding: 16px; border-radius: 12px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 12px; }
-        
-        #user-avatar { width: 110px; height: 110px; border-radius: 50%; border: 4px solid var(--acento); object-fit: cover; display: none; margin-bottom: 25px; box-shadow: 0 0 20px var(--acento); }
-        .empty-msg { color: #1a1a1a; font-size: 1.2rem; font-weight: 700; text-transform: uppercase; margin-top: 60px; text-align: center; display: none; }
-        .grid-productos { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; width: 100%; max-width: 1150px; }
     </style>
 </head>
-<body onclick="reproducirSiCorta()">
+<body id="main-body" class="tema-morado">
 
-    <div id="musica-overlay">
-        <h1 style="margin-bottom: 10px; letter-spacing: 8px; font-size: 3rem;">444 <span style="font-weight: 400; color:var(--acento);">STORE</span></h1>
-        <button class="btn-entrar" onclick="entrarTienda()">Entrar a la Tienda</button>
-    </div>
-
-    <audio id="bg-music" loop>
-        <source src="https://cdn.discordapp.com/attachments/1493938564587585586/1493964987675316264/VOCE_NA_MIRA_-__Ultra_Slowed_.mp3?ex=69e0e2d1&is=69df9151&hm=3fd591a55285ab387fed97fa8d5c24fc8c45a66be1080cf16da8f2b068b7301a&" type="audio/mpeg">
+    <audio id="phonk-audio" loop preload="auto">
+        <source src="https://files.catbox.moe/o3h2v6.mp3" type="audio/mpeg">
     </audio>
 
     <header>
         <div class="logo"><span>444</span> STORE</div>
-        <div class="nav-links">
-            <a onclick="irAInicio()">Inicio</a>
-            <a onclick="irAProductos()">Productos</a>
-        </div>
+        <div class="nav-right">
+            
+            <div class="lang-picker">
+                <select id="lang-select" onchange="cambiarIdioma()">
+                    <option value="es">ES 🇪🇸</option>
+                    <option value="pt">PT 🇵🇹</option>
+                    <option value="en">EN 🇺🇸</option>
+                </select>
+            </div>
+
+            <div class="color-picker">
+                <div class="color-dot dot-azul" onclick="cambiarTema('azul')" title="Azul"></div>
+                <div class="color-dot dot-rojo" onclick="cambiarTema('rojo')" title="Rojo"></div>
+                <div class="color-dot dot-morado" onclick="cambiarTema('morado')" title="Morado"></div>
+                <div class="color-dot dot-amarillo" onclick="cambiarTema('amarillo')" title="Amarillo"></div>
+            </div>
+
+            <div class="nav-links">
+                <a onclick="mostrarSeccion('welcome-screen')" id="link-inicio">Inicio</a>
+                <a onclick="mostrarSeccion('welcome-screen')" id="link-productos">Productos</a>
+            </div>
+
+            <a href="https://discord.gg/TU_INVITACION" target="_blank">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" class="discord-icon" alt="Discord">
+            </div>
+        </a>
     </header>
 
     <div class="container">
+        
         <div id="auth-section">
             <div class="auth-card">
-                <h2>VINCULAR CUENTA</h2>
+                <h2 style="margin: 0 0 15px 0; font-size: 1.8rem;" id="login-title">SISTEMA 444</h2>
+                <p style="color: var(--subtexto); margin-bottom: 35px;" id="login-text">Vincula tu cuenta de Discord para ingresar.</p>
                 <button class="btn-discord" onclick="loginDiscord()">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="20"> VINCULAR DISCORD
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="22" style="filter: invert(1);">
+                    <span id="login-btn-text">VINCULAR CUENTA</span>
                 </button>
             </div>
         </div>
 
-        <div id="welcome-screen" style="display:none; text-align: center;">
-            <img id="user-avatar" src="">
-            <h1 style="font-size: 2.5rem; margin:0;">HOLA, <span id="user-tag" style="color:var(--acento)"></span></h1>
-            <p style="color: #5865F2; font-weight: bold; margin-top: 10px;">MÚSICA ACTIVA 🔊</p>
+        <div id="welcome-screen" style="display: none;">
+            <div class="avatar-container">
+                <img id="user-avatar" src="" class="avatar-glow">
+            </div>
+            <h1 class="welcome-text">HOLA, <span id="user-tag"></span></h1>
+            <p class="status-text" id="status-ok">SESIÓN INICIADA CORRECTAMENTE ✅</p>
         </div>
 
-        <section id="shop-section" style="display:none; width:100%;">
-            <div id="lista-productos" class="grid-productos"></div>
-            <div id="no-products-msg" class="empty-msg">No hay productos disponibles en este momento</div>
-        </section>
     </div>
 
     <script>
-        const CLIENT_ID = "1494042607280455821"; 
-        const REDIRECT_URI = "https://aimdavid-afk.github.io/444-store/";
-        const WEBHOOK_URL = "https://discord.com/api/webhooks/1494040311159193733/ekTKj4NBkrejsR2m4G7h3aj64yYVWFXmteloFzTp_62K5h_H973vFxdDhCku6TqbXn5d";
+        // CONFIGURACIÓN OAUTH2 (No tocar si ya te funciona)
+        const CLIENT_ID = "123456789012345678"; // <--- CAMBIA ESTO POR TU CLIENT ID REAL
+        const REDIRECT_URI = window.location.href.split('#')[0]; // Usa la URL actual automáticamente
 
-        const audio = document.getElementById('bg-music');
-
-        // Función para entrar y activar música
-        function entrarTienda() {
-            audio.volume = 0.5;
-            audio.play();
-            document.getElementById('musica-overlay').style.display = 'none';
-        }
-
-        // Si el usuario hace clic en cualquier lado, nos aseguramos que suene
-        function reproducirSiCorta() {
-            if (audio.paused && document.getElementById('musica-overlay').style.display === 'none') {
-                audio.play();
-            }
-        }
-
-        function loginDiscord() {
-            window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
-        }
-
-        window.onload = async () => {
-            const params = new URLSearchParams(window.location.hash.slice(1));
-            const token = params.get('access_token');
-            
-            if (token) {
-                // Al volver de Discord, ocultamos el overlay de una vez
-                document.getElementById('musica-overlay').style.display = 'none';
-                document.getElementById('auth-section').style.display = 'none';
-                document.getElementById('welcome-screen').style.display = 'block';
-                
-                // Forzar reproducción al cargar (requiere un clic previo del usuario antes de ir a Discord)
-                audio.volume = 0.5;
-                audio.play().catch(() => {
-                    console.log("Esperando clic para reanudar música...");
-                });
-
-                try {
-                    const resp = await fetch('https://discord.com/api/users/@me', { headers: { Authorization: `Bearer ${token}` } });
-                    const user = await resp.json();
-                    
-                    document.getElementById('user-tag').textContent = user.username.toUpperCase();
-                    const avatarImg = document.getElementById('user-avatar');
-                    const urlFoto = user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` : "https://cdn.discordapp.com/embed/avatars/0.png";
-                    avatarImg.src = urlFoto;
-                    avatarImg.style.display = 'block';
-
-                    // WEBHOOK LOG
-                    fetch(WEBHOOK_URL, {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
-                        body: JSON.stringify({
-                            embeds: [{
-                                title: "🚀 SESIÓN INICIADA",
-                                description: `El usuario **${user.username}** ha entrado con éxito.`,
-                                color: 10695679,
-                                thumbnail: { url: urlFoto },
-                                timestamp: new Date()
-                            }]
-                        })
-                    });
-
-                } catch (e) { console.error("Error de sesión"); }
+        // DICCIONARIO DE TRADUCCIONES
+        const textos = {
+            es: {
+                inicio: "Inicio", productos: "Productos",
+                logTitle: "SISTEMA 444", logText: "Vincula tu cuenta de Discord para ingresar.", logBtn: "VINCULAR CUENTA",
+                hola: "HOLA", sesionOk: "SESIÓN INICIADA CORRECTAMENTE ✅"
+            },
+            pt: {
+                inicio: "Início", productos: "Produtos",
+                logTitle: "SISTEMA 444", logText: "Vincule sua conta do Discord para entrar.", logBtn: "VINCULAR CONTA",
+                hola: "OLÁ", sesionOk: "SESSÃO INICIADA CORRETAMENTE ✅"
+            },
+            en: {
+                inicio: "Home", productos: "Products",
+                logTitle: "444 SYSTEM", logText: "Link your Discord account to enter.", logBtn: "LINK ACCOUNT",
+                hola: "HELLO", sesionOk: "SESSION STARTED SUCCESSFULLY ✅"
             }
         };
 
-        function irAInicio() { document.getElementById('shop-section').style.display = 'none'; document.getElementById('welcome-screen').style.display = 'block'; }
-        function irAProductos() { document.getElementById('welcome-screen').style.display = 'none'; document.getElementById('shop-section').style.display = 'block'; verificarProductos(); }
-        function verificarProductos() { const lista = document.getElementById('lista-productos'); document.getElementById('no-products-msg').style.display = (lista.children.length === 0) ? 'block' : 'none'; }
+        // --- FUNCIONES DE MÚSICA Y TEMA (NUEVAS) ---
+
+        // Función para cambiar el color acento
+        function cambiarTema(color) {
+            document.getElementById('main-body').className = 'tema-' + color;
+            // Guardar preferencia
+            localStorage.setItem('444_tema', color);
+            
+            // Actualizar sombra del avatar si existe
+            const glow = document.querySelector('.avatar-glow');
+            if(glow) {
+                const colorHex = getComputedStyle(document.documentElement).getPropertyValue('--acento');
+                glow.style.boxShadow = `0 0 30px ${colorHex}99`; // Sombra con opacidad
+            }
+        }
+
+        // Función para el idioma
+        function cambiarIdioma() {
+            const lang = document.getElementById('lang-select').value;
+            localStorage.setItem('444_lang', lang); // Guardar
+            aplicarTextos(lang);
+        }
+
+        function aplicarTextos(lang) {
+            const t = textos[lang];
+            // Header
+            document.getElementById('link-inicio').innerText = t.inicio;
+            document.getElementById('link-productos').innerText = t.productos;
+            // Login
+            document.getElementById('login-title').innerText = t.logTitle;
+            document.getElementById('login-text').innerText = t.logText;
+            document.getElementById('login-btn-text').innerText = t.logBtn;
+            // Welcome
+            document.getElementById('status-ok').innerText = t.sesionOk;
+            // El 'Hola' se aplica al cargar el usuario
+        }
+
+        // --- FUNCIONES DE MÚSICA (NUEVAS Y COMPLEJAS) ---
+        // Los navegadores bloquean el autoplay. Necesitamos un clic.
+        
+        function intentarReproducirMusica() {
+            const audio = document.getElementById('phonk-audio');
+            audio.volume = 0.4; // Volumen inicial 40%
+
+            // Intentar reproducir. Si falla (bloqueo), esperamos al primer clic en la web.
+            audio.play().then(() => {
+                console.log("Música iniciada automáticamente.");
+            }).catch(error => {
+                console.log("Autoplay bloqueado. Esperando interacción del usuario.");
+                // Añadir un listener global para el primer clic
+                document.body.addEventListener('click', iniciarAlClic, { once: true });
+            });
+        }
+
+        function iniciarAlClic() {
+            const audio = document.getElementById('phonk-audio');
+            audio.play();
+            console.log("Música iniciada por interacción.");
+        }
+
+
+        // --- FUNCIONES DE DISCORD (TUYAS OPTIMIZADAS) ---
+
+        function loginDiscord() {
+            // Generar URL de Discord
+            const url = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
+            window.location.href = url;
+        }
+
+        function mostrarSeccion(id) {
+            document.getElementById('auth-section').style.display = 'none';
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById(id).style.display = 'block';
+        }
+
+        // AL CARGAR LA PÁGINA
+        window.onload = async () => {
+            // 1. Cargar preferencias guardadas
+            const langGuardado = localStorage.getItem('444_lang') || 'es';
+            document.getElementById('lang-select').value = langGuardado;
+            aplicarTextos(langGuardado);
+
+            const temaGuardado = localStorage.getItem('444_tema') || 'morado';
+            cambiarTema(temaGuardado);
+
+            // 2. Intentar música
+            intentarReproducirMusica();
+
+            // 3. Procesar Login OAuth2
+            const params = new URLSearchParams(window.location.hash.slice(1));
+            const token = params.get('access_token');
+
+            if (token) {
+                // Hay token -> Usuario logueado -> Mostrar Bienvenida
+                mostrarSeccion('welcome-screen');
+
+                try {
+                    // Obtener datos de Discord
+                    const resp = await fetch('https://discord.com/api/users/@me', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    const user = await resp.json();
+
+                    // Aplicar datos a tu diseño
+                    document.getElementById('user-tag').textContent = user.username.toUpperCase();
+                    
+                    const lang = document.getElementById('lang-select').value;
+                    const welcomePrefix = textos[lang].hola;
+                    document.querySelector('.welcome-text').innerHTML = `${welcomePrefix}, <span id="user-tag">${user.username.toUpperCase()}</span>`;
+
+                    // Cargar Avatar
+                    const avatarImg = document.getElementById('user-avatar');
+                    if (user.avatar) {
+                        avatarImg.src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256`;
+                    } else {
+                        // Avatar por defecto si no tiene
+                        avatarImg.src = "https://cdn.discordapp.com/embed/avatars/0.png";
+                    }
+
+                } catch (error) {
+                    console.error("Error obteniendo datos de Discord:", error);
+                    // Si falla, volver al login
+                    mostrarSeccion('auth-section');
+                }
+            } else {
+                // No hay token -> Mostrar Login
+                mostrarSeccion('auth-section');
+            }
+        };
     </script>
 </body>
 </html>
