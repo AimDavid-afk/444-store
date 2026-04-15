@@ -14,7 +14,7 @@
             --acento: #a333ff; /* Morado por defecto */
         }
 
-        /* Temas de Color */
+        /* Temas de Color dinámicos */
         body.tema-azul { --acento: #007bff; }
         body.tema-rojo { --acento: #ff3b3b; }
         body.tema-amarillo { --acento: #ffcc00; }
@@ -38,14 +38,21 @@
 
         .nav-right { display: flex; align-items: center; gap: 20px; }
 
-        /* Selectores de Idioma y Color */
-        .selector-container { display: flex; gap: 15px; align-items: center; background: #111; padding: 5px 15px; border-radius: 50px; border: 1px solid #222; }
+        /* Contenedor de Selectores (Idioma y Color) */
+        .selector-box { 
+            display: flex; gap: 15px; align-items: center; 
+            background: #111; padding: 6px 15px; border-radius: 50px; 
+            border: 1px solid #222; 
+        }
         
-        .lang-select { background: transparent; color: var(--subtexto); border: none; font-size: 0.75rem; font-weight: 700; cursor: pointer; outline: none; }
-        .lang-select:hover { color: white; }
+        .lang-picker { 
+            background: transparent; color: var(--subtexto); border: none; 
+            font-size: 0.75rem; font-weight: 700; cursor: pointer; outline: none; 
+        }
+        .lang-picker:hover { color: white; }
 
         .color-dots { display: flex; gap: 8px; }
-        .dot { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: 0.2s; }
+        .dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: 0.2s; }
         .dot:hover { transform: scale(1.3); }
         .d-morado { background: #a333ff; }
         .d-azul { background: #007bff; }
@@ -56,7 +63,10 @@
         .nav-links a { color: var(--subtexto); text-decoration: none; font-size: 0.8rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
         .nav-links a:hover { color: var(--acento); }
 
-        .discord-btn { background: #5865F2; padding: 8px; border-radius: 8px; display: flex; align-items: center; transition: 0.3s; }
+        .discord-btn { 
+            background: #5865F2; padding: 8px; border-radius: 10px; 
+            display: flex; align-items: center; transition: 0.3s; 
+        }
         .discord-btn:hover { background: #4752c4; transform: scale(1.1); }
 
         /* Contenido Central */
@@ -64,21 +74,21 @@
         
         #welcome-screen { text-align: center; }
         .avatar-glow {
-            width: 130px; height: 130px; border-radius: 50%;
+            width: 140px; height: 140px; border-radius: 50%;
             border: 4px solid var(--acento); object-fit: cover;
-            box-shadow: 0 0 30px rgba(163, 51, 255, 0.4);
-            margin-bottom: 20px; transition: 0.3s;
+            box-shadow: 0 0 35px var(--acento);
+            margin-bottom: 25px; transition: 0.4s ease;
         }
         .welcome-text { font-size: 3.5rem; font-weight: 800; margin: 0; text-transform: uppercase; }
         .welcome-text span { color: var(--acento); transition: 0.3s; }
-        .status { color: #44eb44; font-weight: bold; margin-top: 10px; }
+        .status-msg { color: #5865F2; font-weight: bold; margin-top: 15px; letter-spacing: 1px; }
 
-        /* Login Card */
-        .auth-card { background: var(--tarjeta); padding: 40px; border-radius: 25px; border-top: 4px solid var(--acento); text-align: center; max-width: 350px; }
-        .btn-login { background: #5865F2; color: white; border: none; padding: 15px 30px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; }
+        /* Login */
+        .auth-card { background: var(--tarjeta); padding: 50px; border-radius: 30px; border-top: 5px solid var(--acento); text-align: center; max-width: 380px; width: 90%; }
+        .btn-login { background: #5865F2; color: white; border: none; padding: 16px; border-radius: 14px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 25px; font-size: 1rem; }
     </style>
 </head>
-<body id="body-main" class="tema-morado">
+<body id="main-view" class="tema-morado">
 
     <audio id="phonk-audio" loop>
         <source src="https://files.catbox.moe/o3h2v6.mp3" type="audio/mpeg">
@@ -88,44 +98,45 @@
         <div class="logo"><span>444</span> STORE</div>
         
         <div class="nav-right">
-            <div class="selector-container">
-                <select class="lang-select" id="lang-picker" onchange="cambiarIdioma()">
-                    <option value="es">ESP</option>
-                    <option value="en">ENG</option>
-                    <option value="pt">POR</option>
+            <div class="selector-box">
+                <select class="lang-picker" id="lang-select" onchange="updateLang()">
+                    <option value="es">ESP 🇪🇸</option>
+                    <option value="en">ENG 🇺🇸</option>
+                    <option value="pt">POR 🇵🇹</option>
                 </select>
+                
                 <div class="color-dots">
-                    <div class="dot d-morado" onclick="setTema('morado')"></div>
-                    <div class="dot d-azul" onclick="setTema('azul')"></div>
-                    <div class="dot d-rojo" onclick="setTema('rojo')"></div>
-                    <div class="dot d-amarillo" onclick="setTema('amarillo')"></div>
+                    <div class="dot d-morado" onclick="applyTheme('morado')" title="Morado"></div>
+                    <div class="dot d-azul" onclick="applyTheme('azul')" title="Azul"></div>
+                    <div class="dot d-rojo" onclick="applyTheme('rojo')" title="Rojo"></div>
+                    <div class="dot d-amarillo" onclick="applyTheme('amarillo')" title="Amarillo"></div>
                 </div>
             </div>
 
             <div class="nav-links">
-                <a id="txt-inicio">Inicio</a>
-                <a id="txt-productos">Productos</a>
+                <a id="nav-home" onclick="showWelcome()">Inicio</a>
+                <a id="nav-shop" onclick="showWelcome()">Productos</a>
             </div>
 
-            <a href="https://discord.gg/TU_LINK" target="_blank" class="discord-btn">
-                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="20" style="filter: invert(1);">
+            <a href="https://discord.gg/TU_INVITACION" target="_blank" class="discord-btn">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="22" style="filter: invert(1);">
             </a>
         </div>
     </header>
 
     <div class="container">
-        <div id="auth-section">
+        <div id="auth-view">
             <div class="auth-card">
-                <h2 id="txt-auth-title">SISTEMA 444</h2>
-                <p id="txt-auth-desc" style="color: var(--subtexto);">Ingresa con tu cuenta de Discord.</p>
-                <button class="btn-login" onclick="login()">VINCULAR DISCORD</button>
+                <h2 id="login-title">ACCESO 444</h2>
+                <p id="login-desc" style="color: var(--subtexto);">Vincula tu cuenta para continuar.</p>
+                <button class="btn-login" onclick="startLogin()">LOGIN DISCORD</button>
             </div>
         </div>
 
         <div id="welcome-screen" style="display: none;">
-            <img id="user-avatar" src="" class="avatar-glow">
-            <h1 class="welcome-text"><span id="txt-hola">HOLA</span>, <span id="user-tag"></span></h1>
-            <p class="status" id="txt-status">SESIÓN INICIADA CORRECTAMENTE ✅</p>
+            <img id="user-pfp" src="" class="avatar-glow">
+            <h1 class="welcome-text"><span id="txt-greet">HOLA</span>, <span id="user-name"></span></h1>
+            <p class="status-msg" id="txt-active">MÚSICA ACTIVA 🔊</p>
         </div>
     </div>
 
@@ -134,61 +145,75 @@
         const REDIRECT_URI = "https://aimdavid-afk.github.io/444-store/";
 
         // Traducciones
-        const langData = {
-            es: { inicio: "Inicio", productos: "Productos", authT: "SISTEMA 444", authD: "Ingresa con tu cuenta de Discord.", hola: "HOLA", status: "SESIÓN INICIADA CORRECTAMENTE ✅" },
-            en: { inicio: "Home", productos: "Products", authT: "444 SYSTEM", authD: "Login with your Discord account.", hola: "HELLO", status: "SESSION STARTED SUCCESSFULLY ✅" },
-            pt: { inicio: "Início", productos: "Produtos", authT: "SISTEMA 444", authD: "Entre com sua conta do Discord.", hola: "OLÁ", status: "SESSÃO INICIADA COM SUCESSO ✅" }
+        const translations = {
+            es: { home: "Inicio", shop: "Productos", lTitle: "ACCESO 444", lDesc: "Vincula tu cuenta para continuar.", greet: "HOLA", active: "MÚSICA ACTIVA 🔊" },
+            en: { home: "Home", shop: "Products", lTitle: "444 ACCESS", lDesc: "Link your account to continue.", greet: "HELLO", active: "MUSIC ACTIVE 🔊" },
+            pt: { home: "Início", shop: "Produtos", lTitle: "ACESSO 444", lDesc: "Vincule sua conta para continuar.", greet: "OLÁ", active: "MÚSICA ATIVA 🔊" }
         };
 
-        function setTema(color) {
-            document.getElementById('body-main').className = 'tema-' + color;
-            localStorage.setItem('444_color', color);
+        // Función para cambiar el color
+        function applyTheme(color) {
+            document.getElementById('main-view').className = 'tema-' + color;
+            localStorage.setItem('444_theme', color);
+            // Ajustar el brillo del avatar al color elegido
+            const glow = document.querySelector('.avatar-glow');
+            if(glow) glow.style.boxShadow = `0 0 35px var(--acento)`;
         }
 
-        function cambiarIdioma() {
-            const lang = document.getElementById('lang-picker').value;
+        // Función para cambiar idioma
+        function updateLang() {
+            const lang = document.getElementById('lang-select').value;
             localStorage.setItem('444_lang', lang);
-            const t = langData[lang];
-            document.getElementById('txt-inicio').innerText = t.inicio;
-            document.getElementById('txt-productos').innerText = t.productos;
-            document.getElementById('txt-auth-title').innerText = t.authT;
-            document.getElementById('txt-auth-desc').innerText = t.authD;
-            document.getElementById('txt-hola').innerText = t.hola;
-            document.getElementById('txt-status').innerText = t.status;
+            const t = translations[lang];
+            
+            document.getElementById('nav-home').innerText = t.home;
+            document.getElementById('nav-shop').innerText = t.shop;
+            document.getElementById('login-title').innerText = t.lTitle;
+            document.getElementById('login-desc').innerText = t.lDesc;
+            document.getElementById('txt-greet').innerText = t.greet;
+            document.getElementById('txt-active').innerText = t.active;
         }
 
-        function login() {
+        function startLogin() {
             window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
         }
 
-        window.onload = async () => {
-            // Cargar preferencias
-            const savedColor = localStorage.getItem('444_color') || 'morado';
-            setTema(savedColor);
-            const savedLang = localStorage.getItem('444_lang') || 'es';
-            document.getElementById('lang-picker').value = savedLang;
-            cambiarIdioma();
+        function showWelcome() {
+            if(document.getElementById('user-name').innerText !== "") {
+                document.getElementById('auth-view').style.display = 'none';
+                document.getElementById('welcome-screen').style.display = 'block';
+            }
+        }
 
-            // Activar música al primer clic
+        window.onload = async () => {
+            // Cargar preferencias guardadas
+            const savedColor = localStorage.getItem('444_theme') || 'morado';
+            applyTheme(savedColor);
+            const savedLang = localStorage.getItem('444_lang') || 'es';
+            document.getElementById('lang-select').value = savedLang;
+            updateLang();
+
+            // Iniciar música al primer toque en la pantalla
             document.body.addEventListener('click', () => {
                 const audio = document.getElementById('phonk-audio');
                 audio.volume = 0.3;
                 audio.play();
             }, { once: true });
 
+            // Verificar si hay sesión de Discord
             const params = new URLSearchParams(window.location.hash.slice(1));
             const token = params.get('access_token');
 
             if (token) {
-                document.getElementById('auth-section').style.display = 'none';
+                document.getElementById('auth-view').style.display = 'none';
                 document.getElementById('welcome-screen').style.display = 'block';
 
                 const resp = await fetch('https://discord.com/api/users/@me', {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 const user = await resp.json();
-                document.getElementById('user-tag').textContent = user.username.toUpperCase();
-                document.getElementById('user-avatar').src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256`;
+                document.getElementById('user-name').textContent = user.username.toUpperCase();
+                document.getElementById('user-pfp').src = user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256` : "https://cdn.discordapp.com/embed/avatars/0.png";
             }
         };
     </script>
