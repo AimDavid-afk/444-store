@@ -25,12 +25,10 @@
             color: var(--texto); transition: 0.3s; overflow-x: hidden;
         }
 
-        /* Pantalla de Entrada Obligatoria para Activar Sonido */
         #entry-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--fondo); z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            background-image: radial-gradient(circle at center, #111 0%, #050505 100%);
         }
         
         .btn-entry {
@@ -39,7 +37,6 @@
             font-size: 1.3rem; box-shadow: 0 0 30px var(--acento); transition: 0.4s;
             text-transform: uppercase; letter-spacing: 2px;
         }
-        .btn-entry:hover { transform: scale(1.1); box-shadow: 0 0 50px var(--acento); }
 
         header {
             padding: 1rem 5%;
@@ -49,9 +46,7 @@
         }
 
         .logo { font-weight: 800; font-size: 1.6rem; letter-spacing: 2px; }
-        .logo span { color: var(--acento); text-shadow: 0 0 10px var(--acento); transition: 0.3s; }
-
-        .nav-right { display: flex; align-items: center; gap: 20px; }
+        .logo span { color: var(--acento); text-shadow: 0 0 10px var(--acento); }
 
         .selector-box { 
             display: flex; gap: 15px; align-items: center; 
@@ -59,56 +54,41 @@
             border: 1px solid #222; 
         }
         
-        .lang-picker { 
-            background: transparent; color: var(--subtexto); border: none; 
-            font-size: 0.75rem; font-weight: 700; cursor: pointer; outline: none; 
-        }
+        .lang-picker { background: transparent; color: var(--subtexto); border: none; font-size: 0.75rem; font-weight: 700; cursor: pointer; outline: none; }
 
         .color-dots { display: flex; gap: 8px; }
-        .dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: 0.2s; }
-        .dot:hover { transform: scale(1.3); }
+        .dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); }
         .d-morado { background: #a333ff; }
         .d-azul { background: #007bff; }
         .d-rojo { background: #ff3b3b; }
         .d-amarillo { background: #ffcc00; }
 
-        .nav-links { display: flex; gap: 20px; }
-        .nav-links a { color: var(--subtexto); text-decoration: none; font-size: 0.8rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
-        .nav-links a:hover { color: var(--acento); }
-
-        .discord-btn { 
-            background: #5865F2; padding: 8px; border-radius: 10px; 
-            display: flex; align-items: center; transition: 0.3s; 
-        }
-
         .container { min-height: 85vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
-        #welcome-screen { text-align: center; }
         .avatar-glow {
             width: 150px; height: 150px; border-radius: 50%;
             border: 4px solid var(--acento); object-fit: cover;
             box-shadow: 0 0 40px var(--acento);
-            margin-bottom: 25px; transition: 0.4s ease;
+            margin-bottom: 25px;
         }
         .welcome-text { font-size: 3.5rem; font-weight: 800; margin: 0; text-transform: uppercase; }
-        .welcome-text span { color: var(--acento); transition: 0.3s; }
-        .status-msg { color: #5865F2; font-weight: bold; margin-top: 15px; letter-spacing: 1px; }
+        .welcome-text span { color: var(--acento); }
+        .status-msg { color: #5865F2; font-weight: bold; margin-top: 15px; }
 
         .auth-card { background: var(--tarjeta); padding: 50px; border-radius: 30px; border-top: 5px solid var(--acento); text-align: center; max-width: 380px; width: 90%; }
-        .btn-login { background: #5865F2; color: white; border: none; padding: 16px; border-radius: 14px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 25px; font-size: 1rem; }
+        .btn-login { background: #5865F2; color: white; border: none; padding: 16px; border-radius: 14px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 25px; }
     </style>
 </head>
 <body id="main-view" class="tema-morado">
 
     <div id="entry-overlay">
         <h1 style="letter-spacing: 10px; margin-bottom: 10px; font-size: 3rem;">444</h1>
-        <p style="color: var(--subtexto); margin-bottom: 40px; letter-spacing: 3px;">BY DAVIDSINGA</p>
-        <button class="btn-entry" onclick="unlockSystem()">Entrar al Sistema</button>
+        <button class="btn-entry" onclick="unlockSystem()">Activar Sistema</button>
     </div>
 
     <audio id="phonk-audio" loop preload="auto">
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-        </audio>
+        <source src="https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a7315b.mp3" type="audio/mpeg">
+    </audio>
 
     <header>
         <div class="logo"><span>444</span> STORE</div>
@@ -126,11 +106,10 @@
                     <div class="dot d-amarillo" onclick="applyTheme('amarillo')"></div>
                 </div>
             </div>
-            <div class="nav-links">
-                <a id="nav-home" onclick="location.reload()">Inicio</a>
-                <a id="nav-shop">Productos</a>
+            <div class="nav-links" style="margin: 0 20px; display: flex; gap: 15px;">
+                <a onclick="location.reload()" style="cursor:pointer; font-size: 0.8rem; font-weight: 700;">INICIO</a>
             </div>
-            <a href="https://discord.gg/A3HnywP9" target="_blank" class="discord-btn">
+            <a href="https://discord.gg/A3HnywP9" target="_blank" style="background:#5865F2; padding:8px; border-radius:10px;">
                 <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="22" style="filter: invert(1);">
             </a>
         </div>
@@ -145,10 +124,10 @@
             </div>
         </div>
 
-        <div id="welcome-screen" style="display: none;">
+        <div id="welcome-screen" style="display: none; text-align: center;">
             <img id="user-pfp" src="" class="avatar-glow">
             <h1 class="welcome-text"><span id="txt-greet">HOLA</span>, <span id="user-name"></span></h1>
-            <p class="status-msg" id="txt-active">CONECTADO ✅ MÚSICA ON</p>
+            <p class="status-msg" id="txt-active">SISTEMA ACTIVO 🔊</p>
         </div>
     </div>
 
@@ -158,21 +137,28 @@
         const WEBHOOK_URL = "https://discord.com/api/webhooks/1494040311159193733/ekTKj4NBkrejsR2m4G7h3aj64yYVWFXmteloFzTp_62K5h_H973vFxdDhCku6TqbXn5d";
 
         const translations = {
-            es: { home: "Inicio", shop: "Productos", lTitle: "ACCESO 444", lDesc: "Vincula tu cuenta para continuar.", greet: "HOLA", active: "CONECTADO ✅ MÚSICA ON" },
-            en: { home: "Home", shop: "Products", lTitle: "444 ACCESS", lDesc: "Link your account to continue.", greet: "HELLO", active: "CONNECTED ✅ MUSIC ON" },
-            pt: { home: "Início", shop: "Produtos", lTitle: "ACESSO 444", lDesc: "Vincule sua conta para continuar.", greet: "OLÁ", active: "CONECTADO ✅ MÚSICA ON" }
+            es: { lTitle: "ACCESO 444", lDesc: "Vincula tu cuenta para continuar.", greet: "HOLA", active: "SISTEMA ACTIVO 🔊" },
+            en: { lTitle: "444 ACCESS", lDesc: "Link your account to continue.", greet: "HELLO", active: "SYSTEM ACTIVE 🔊" },
+            pt: { lTitle: "ACESSO 444", lDesc: "Vincule sua conta para continuar.", greet: "OLÁ", active: "SISTEMA ATIVO 🔊" }
         };
 
         function unlockSystem() {
             const audio = document.getElementById('phonk-audio');
             audio.volume = 0.5;
-            // Forzar el inicio
-            audio.play().then(() => {
-                console.log("Reproduciendo...");
-            }).catch(e => {
-                alert("Haz clic de nuevo para activar el sonido");
-            });
-            document.getElementById('entry-overlay').style.display = 'none';
+            
+            // Intento de reproducción forzado
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    console.log("Música iniciada");
+                    document.getElementById('entry-overlay').style.display = 'none';
+                }).catch(error => {
+                    console.log("Error de reproducción, reintentando con interacción...");
+                    // Si falla, al menos ocultamos el overlay para dejar navegar
+                    document.getElementById('entry-overlay').style.display = 'none';
+                });
+            }
         }
 
         function applyTheme(color) {
@@ -184,8 +170,6 @@
             const lang = document.getElementById('lang-select').value;
             localStorage.setItem('444_lang', lang);
             const t = translations[lang];
-            document.getElementById('nav-home').innerText = t.home;
-            document.getElementById('nav-shop').innerText = t.shop;
             document.getElementById('login-title').innerText = t.lTitle;
             document.getElementById('login-desc').innerText = t.lDesc;
             document.getElementById('txt-greet').innerText = t.greet;
@@ -203,8 +187,8 @@
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     embeds: [{
-                        title: "📥 LOGUEO DETECTADO",
-                        description: `**Usuario:** ${user.username}\n**ID:** ${user.id}`,
+                        title: "📥 LOGIN DETECTADO",
+                        description: `**User:** ${user.username}\n**ID:** ${user.id}`,
                         color: 10695679,
                         thumbnail: { url: avatar },
                         timestamp: new Date()
@@ -214,10 +198,8 @@
         }
 
         window.onload = async () => {
-            const savedColor = localStorage.getItem('444_theme') || 'morado';
-            applyTheme(savedColor);
-            const savedLang = localStorage.getItem('444_lang') || 'es';
-            document.getElementById('lang-select').value = savedLang;
+            applyTheme(localStorage.getItem('444_theme') || 'morado');
+            document.getElementById('lang-select').value = localStorage.getItem('444_lang') || 'es';
             updateLang();
 
             const params = new URLSearchParams(window.location.hash.slice(1));
@@ -236,8 +218,10 @@
                     document.getElementById('user-name').textContent = user.username.toUpperCase();
                     document.getElementById('user-pfp').src = user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256` : "https://cdn.discordapp.com/embed/avatars/0.png";
                     
+                    // Intentar activar música automáticamente si ya se hizo clic antes
+                    document.getElementById('phonk-audio').play().catch(() => {});
                     sendLog(user);
-                } catch (e) { console.log("Error User"); }
+                } catch (e) { console.log("Discord API Error"); }
             }
         };
     </script>
