@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>444 Store | Sistema</title>
-    
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
-    
     <style>
-        /* VARIABLES DE DISEÑO (Colores base) */
         :root {
             --fondo: #050505;
             --tarjeta: #0d0d0d;
@@ -17,389 +14,181 @@
             --acento: #a333ff; /* Morado por defecto */
         }
 
-        /* TEMAS DE COLOR */
-        .tema-morado { --acento: #a333ff; }
-        .tema-azul { --acento: #007bff; }
-        .tema-rojo { --acento: #ff3b3b; }
-        .tema-amarillo { --acento: #ffcc00; }
+        /* Temas de Color */
+        body.tema-azul { --acento: #007bff; }
+        body.tema-rojo { --acento: #ff3b3b; }
+        body.tema-amarillo { --acento: #ffcc00; }
+        body.tema-morado { --acento: #a333ff; }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            margin: 0; padding: 0;
-            background-color: var(--fondo);
-            color: var(--texto);
-            transition: all 0.4s ease; /* Transición suave al cambiar color */
-            overflow-x: hidden;
+            margin: 0; background-color: var(--fondo);
+            color: var(--texto); transition: 0.3s; overflow-x: hidden;
         }
 
-        /* BARRA DE NAVEGACIÓN (HEADER) */
         header {
             padding: 1rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.95);
-            border-bottom: 1px solid #1a1a1a;
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(0, 0, 0, 0.95); border-bottom: 1px solid #1a1a1a;
             position: sticky; top: 0; z-index: 1000;
         }
 
-        .logo {
-            font-weight: 800; font-size: 1.6rem; letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-        .logo span {
-            color: var(--acento);
-            text-shadow: 0 0 10px var(--acento);
-            transition: 0.3s;
-        }
+        .logo { font-weight: 800; font-size: 1.6rem; letter-spacing: 2px; }
+        .logo span { color: var(--acento); text-shadow: 0 0 10px var(--acento); transition: 0.3s; }
 
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 25px;
-        }
+        .nav-right { display: flex; align-items: center; gap: 20px; }
 
-        .nav-links {
-            display: flex; gap: 20px;
-        }
-        .nav-links a {
-            color: var(--subtexto);
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .nav-links a:hover {
-            color: var(--acento);
-        }
+        /* Selectores de Idioma y Color */
+        .selector-container { display: flex; gap: 15px; align-items: center; background: #111; padding: 5px 15px; border-radius: 50px; border: 1px solid #222; }
+        
+        .lang-select { background: transparent; color: var(--subtexto); border: none; font-size: 0.75rem; font-weight: 700; cursor: pointer; outline: none; }
+        .lang-select:hover { color: white; }
 
-        /* SELECTOR DE IDIOMAS */
-        .lang-picker select {
-            background: #111;
-            color: var(--subtexto);
-            border: 1px solid #333;
-            padding: 5px 10px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            cursor: pointer;
-            outline: none;
-        }
-        .lang-picker select:hover { border-color: var(--acento); color: white;}
+        .color-dots { display: flex; gap: 8px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); transition: 0.2s; }
+        .dot:hover { transform: scale(1.3); }
+        .d-morado { background: #a333ff; }
+        .d-azul { background: #007bff; }
+        .d-rojo { background: #ff3b3b; }
+        .d-amarillo { background: #ffcc00; }
 
-        /* SELECTOR DE COLORES (PUNTOS) */
-        .color-picker {
-            display: flex; gap: 10px;
-        }
-        .color-dot {
-            width: 16px; height: 16px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid #222;
-            transition: 0.2s;
-        }
-        .color-dot:hover { transform: scale(1.2); }
-        .dot-morado { background: #a333ff; }
-        .dot-azul { background: #007bff; }
-        .dot-rojo { background: #ff3b3b; }
-        .dot-amarillo { background: #ffcc00; }
+        .nav-links { display: flex; gap: 20px; }
+        .nav-links a { color: var(--subtexto); text-decoration: none; font-size: 0.8rem; font-weight: 700; cursor: pointer; text-transform: uppercase; }
+        .nav-links a:hover { color: var(--acento); }
 
-        /* ICONO DE DISCORD */
-        .discord-icon {
-            width: 26px; height: 26px;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-        .discord-icon:hover {
-            filter: drop-shadow(0 0 8px #5865F2);
-            transform: translateY(-2px);
-        }
+        .discord-btn { background: #5865F2; padding: 8px; border-radius: 8px; display: flex; align-items: center; transition: 0.3s; }
+        .discord-btn:hover { background: #4752c4; transform: scale(1.1); }
 
-        /* CONTENEDOR PRINCIPAL */
-        .container {
-            min-height: 85vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        /* TARJETA DE LOGIN */
-        .auth-card {
-            background: var(--tarjeta);
-            padding: 50px;
-            border-radius: 30px;
-            border-top: 5px solid var(--acento);
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.7);
-            max-width: 400px; width: 100%;
-        }
-
-        .btn-discord {
-            background: #5865F2;
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 16px;
-            border-radius: 14px;
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-        }
-        .btn-discord:hover {
-            background: #4752c4;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(88, 101, 242, 0.4);
-        }
-
-        /* PANTALLA DE BIENVENIDA (TU DISEÑO ACTUAL) */
-        #welcome-screen {
-            text-align: center;
-        }
-        .avatar-container {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 25px;
-        }
+        /* Contenido Central */
+        .container { min-height: 85vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        
+        #welcome-screen { text-align: center; }
         .avatar-glow {
-            width: 130px; height: 130px;
-            border-radius: 50%;
-            border: 4px solid var(--acento);
-            object-fit: cover;
-            box-shadow: 0 0 30px rgba(163, 51, 255, 0.6);
-            transition: box-shadow 0.4s ease;
+            width: 130px; height: 130px; border-radius: 50%;
+            border: 4px solid var(--acento); object-fit: cover;
+            box-shadow: 0 0 30px rgba(163, 51, 255, 0.4);
+            margin-bottom: 20px; transition: 0.3s;
         }
-        h1.welcome-text {
-            font-size: 3.5rem; font-weight: 800; margin: 0;
-            text-transform: uppercase; letter-spacing: 2px;
-        }
-        h1.welcome-text span {
-            color: var(--acento);
-        }
-        .status-text {
-            color: #44eb44; /* Verde neón */
-            font-weight: bold;
-            font-size: 1rem;
-            margin-top: 10px;
-            text-shadow: 0 0 10px rgba(68, 235, 68, 0.5);
-        }
+        .welcome-text { font-size: 3.5rem; font-weight: 800; margin: 0; text-transform: uppercase; }
+        .welcome-text span { color: var(--acento); transition: 0.3s; }
+        .status { color: #44eb44; font-weight: bold; margin-top: 10px; }
 
+        /* Login Card */
+        .auth-card { background: var(--tarjeta); padding: 40px; border-radius: 25px; border-top: 4px solid var(--acento); text-align: center; max-width: 350px; }
+        .btn-login { background: #5865F2; color: white; border: none; padding: 15px 30px; border-radius: 12px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; }
     </style>
 </head>
-<body id="main-body" class="tema-morado">
+<body id="body-main" class="tema-morado">
 
-    <audio id="phonk-audio" loop preload="auto">
+    <audio id="phonk-audio" loop>
         <source src="https://files.catbox.moe/o3h2v6.mp3" type="audio/mpeg">
     </audio>
 
     <header>
         <div class="logo"><span>444</span> STORE</div>
+        
         <div class="nav-right">
-            
-            <div class="lang-picker">
-                <select id="lang-select" onchange="cambiarIdioma()">
-                    <option value="es">ES 🇪🇸</option>
-                    <option value="pt">PT 🇵🇹</option>
-                    <option value="en">EN 🇺🇸</option>
+            <div class="selector-container">
+                <select class="lang-select" id="lang-picker" onchange="cambiarIdioma()">
+                    <option value="es">ESP</option>
+                    <option value="en">ENG</option>
+                    <option value="pt">POR</option>
                 </select>
-            </div>
-
-            <div class="color-picker">
-                <div class="color-dot dot-azul" onclick="cambiarTema('azul')" title="Azul"></div>
-                <div class="color-dot dot-rojo" onclick="cambiarTema('rojo')" title="Rojo"></div>
-                <div class="color-dot dot-morado" onclick="cambiarTema('morado')" title="Morado"></div>
-                <div class="color-dot dot-amarillo" onclick="cambiarTema('amarillo')" title="Amarillo"></div>
+                <div class="color-dots">
+                    <div class="dot d-morado" onclick="setTema('morado')"></div>
+                    <div class="dot d-azul" onclick="setTema('azul')"></div>
+                    <div class="dot d-rojo" onclick="setTema('rojo')"></div>
+                    <div class="dot d-amarillo" onclick="setTema('amarillo')"></div>
+                </div>
             </div>
 
             <div class="nav-links">
-                <a onclick="mostrarSeccion('welcome-screen')" id="link-inicio">Inicio</a>
-                <a onclick="mostrarSeccion('welcome-screen')" id="link-productos">Productos</a>
+                <a id="txt-inicio">Inicio</a>
+                <a id="txt-productos">Productos</a>
             </div>
 
-            <a href="https://discord.gg/TU_INVITACION" target="_blank">
-                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" class="discord-icon" alt="Discord">
-            </div>
-        </a>
+            <a href="https://discord.gg/TU_LINK" target="_blank" class="discord-btn">
+                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="20" style="filter: invert(1);">
+            </a>
+        </div>
     </header>
 
     <div class="container">
-        
         <div id="auth-section">
             <div class="auth-card">
-                <h2 style="margin: 0 0 15px 0; font-size: 1.8rem;" id="login-title">SISTEMA 444</h2>
-                <p style="color: var(--subtexto); margin-bottom: 35px;" id="login-text">Vincula tu cuenta de Discord para ingresar.</p>
-                <button class="btn-discord" onclick="loginDiscord()">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="22" style="filter: invert(1);">
-                    <span id="login-btn-text">VINCULAR CUENTA</span>
-                </button>
+                <h2 id="txt-auth-title">SISTEMA 444</h2>
+                <p id="txt-auth-desc" style="color: var(--subtexto);">Ingresa con tu cuenta de Discord.</p>
+                <button class="btn-login" onclick="login()">VINCULAR DISCORD</button>
             </div>
         </div>
 
         <div id="welcome-screen" style="display: none;">
-            <div class="avatar-container">
-                <img id="user-avatar" src="" class="avatar-glow">
-            </div>
-            <h1 class="welcome-text">HOLA, <span id="user-tag"></span></h1>
-            <p class="status-text" id="status-ok">SESIÓN INICIADA CORRECTAMENTE ✅</p>
+            <img id="user-avatar" src="" class="avatar-glow">
+            <h1 class="welcome-text"><span id="txt-hola">HOLA</span>, <span id="user-tag"></span></h1>
+            <p class="status" id="txt-status">SESIÓN INICIADA CORRECTAMENTE ✅</p>
         </div>
-
     </div>
 
     <script>
-        // CONFIGURACIÓN OAUTH2 (No tocar si ya te funciona)
-        const CLIENT_ID = "123456789012345678"; // <--- CAMBIA ESTO POR TU CLIENT ID REAL
-        const REDIRECT_URI = window.location.href.split('#')[0]; // Usa la URL actual automáticamente
+        const CLIENT_ID = "1494042607280455821"; 
+        const REDIRECT_URI = "https://aimdavid-afk.github.io/444-store/";
 
-        // DICCIONARIO DE TRADUCCIONES
-        const textos = {
-            es: {
-                inicio: "Inicio", productos: "Productos",
-                logTitle: "SISTEMA 444", logText: "Vincula tu cuenta de Discord para ingresar.", logBtn: "VINCULAR CUENTA",
-                hola: "HOLA", sesionOk: "SESIÓN INICIADA CORRECTAMENTE ✅"
-            },
-            pt: {
-                inicio: "Início", productos: "Produtos",
-                logTitle: "SISTEMA 444", logText: "Vincule sua conta do Discord para entrar.", logBtn: "VINCULAR CONTA",
-                hola: "OLÁ", sesionOk: "SESSÃO INICIADA CORRETAMENTE ✅"
-            },
-            en: {
-                inicio: "Home", productos: "Products",
-                logTitle: "444 SYSTEM", logText: "Link your Discord account to enter.", logBtn: "LINK ACCOUNT",
-                hola: "HELLO", sesionOk: "SESSION STARTED SUCCESSFULLY ✅"
-            }
+        // Traducciones
+        const langData = {
+            es: { inicio: "Inicio", productos: "Productos", authT: "SISTEMA 444", authD: "Ingresa con tu cuenta de Discord.", hola: "HOLA", status: "SESIÓN INICIADA CORRECTAMENTE ✅" },
+            en: { inicio: "Home", productos: "Products", authT: "444 SYSTEM", authD: "Login with your Discord account.", hola: "HELLO", status: "SESSION STARTED SUCCESSFULLY ✅" },
+            pt: { inicio: "Início", productos: "Produtos", authT: "SISTEMA 444", authD: "Entre com sua conta do Discord.", hola: "OLÁ", status: "SESSÃO INICIADA COM SUCESSO ✅" }
         };
 
-        // --- FUNCIONES DE MÚSICA Y TEMA (NUEVAS) ---
-
-        // Función para cambiar el color acento
-        function cambiarTema(color) {
-            document.getElementById('main-body').className = 'tema-' + color;
-            // Guardar preferencia
-            localStorage.setItem('444_tema', color);
-            
-            // Actualizar sombra del avatar si existe
-            const glow = document.querySelector('.avatar-glow');
-            if(glow) {
-                const colorHex = getComputedStyle(document.documentElement).getPropertyValue('--acento');
-                glow.style.boxShadow = `0 0 30px ${colorHex}99`; // Sombra con opacidad
-            }
+        function setTema(color) {
+            document.getElementById('body-main').className = 'tema-' + color;
+            localStorage.setItem('444_color', color);
         }
 
-        // Función para el idioma
         function cambiarIdioma() {
-            const lang = document.getElementById('lang-select').value;
-            localStorage.setItem('444_lang', lang); // Guardar
-            aplicarTextos(lang);
+            const lang = document.getElementById('lang-picker').value;
+            localStorage.setItem('444_lang', lang);
+            const t = langData[lang];
+            document.getElementById('txt-inicio').innerText = t.inicio;
+            document.getElementById('txt-productos').innerText = t.productos;
+            document.getElementById('txt-auth-title').innerText = t.authT;
+            document.getElementById('txt-auth-desc').innerText = t.authD;
+            document.getElementById('txt-hola').innerText = t.hola;
+            document.getElementById('txt-status').innerText = t.status;
         }
 
-        function aplicarTextos(lang) {
-            const t = textos[lang];
-            // Header
-            document.getElementById('link-inicio').innerText = t.inicio;
-            document.getElementById('link-productos').innerText = t.productos;
-            // Login
-            document.getElementById('login-title').innerText = t.logTitle;
-            document.getElementById('login-text').innerText = t.logText;
-            document.getElementById('login-btn-text').innerText = t.logBtn;
-            // Welcome
-            document.getElementById('status-ok').innerText = t.sesionOk;
-            // El 'Hola' se aplica al cargar el usuario
+        function login() {
+            window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
         }
 
-        // --- FUNCIONES DE MÚSICA (NUEVAS Y COMPLEJAS) ---
-        // Los navegadores bloquean el autoplay. Necesitamos un clic.
-        
-        function intentarReproducirMusica() {
-            const audio = document.getElementById('phonk-audio');
-            audio.volume = 0.4; // Volumen inicial 40%
-
-            // Intentar reproducir. Si falla (bloqueo), esperamos al primer clic en la web.
-            audio.play().then(() => {
-                console.log("Música iniciada automáticamente.");
-            }).catch(error => {
-                console.log("Autoplay bloqueado. Esperando interacción del usuario.");
-                // Añadir un listener global para el primer clic
-                document.body.addEventListener('click', iniciarAlClic, { once: true });
-            });
-        }
-
-        function iniciarAlClic() {
-            const audio = document.getElementById('phonk-audio');
-            audio.play();
-            console.log("Música iniciada por interacción.");
-        }
-
-
-        // --- FUNCIONES DE DISCORD (TUYAS OPTIMIZADAS) ---
-
-        function loginDiscord() {
-            // Generar URL de Discord
-            const url = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
-            window.location.href = url;
-        }
-
-        function mostrarSeccion(id) {
-            document.getElementById('auth-section').style.display = 'none';
-            document.getElementById('welcome-screen').style.display = 'none';
-            document.getElementById(id).style.display = 'block';
-        }
-
-        // AL CARGAR LA PÁGINA
         window.onload = async () => {
-            // 1. Cargar preferencias guardadas
-            const langGuardado = localStorage.getItem('444_lang') || 'es';
-            document.getElementById('lang-select').value = langGuardado;
-            aplicarTextos(langGuardado);
+            // Cargar preferencias
+            const savedColor = localStorage.getItem('444_color') || 'morado';
+            setTema(savedColor);
+            const savedLang = localStorage.getItem('444_lang') || 'es';
+            document.getElementById('lang-picker').value = savedLang;
+            cambiarIdioma();
 
-            const temaGuardado = localStorage.getItem('444_tema') || 'morado';
-            cambiarTema(temaGuardado);
+            // Activar música al primer clic
+            document.body.addEventListener('click', () => {
+                const audio = document.getElementById('phonk-audio');
+                audio.volume = 0.3;
+                audio.play();
+            }, { once: true });
 
-            // 2. Intentar música
-            intentarReproducirMusica();
-
-            // 3. Procesar Login OAuth2
             const params = new URLSearchParams(window.location.hash.slice(1));
             const token = params.get('access_token');
 
             if (token) {
-                // Hay token -> Usuario logueado -> Mostrar Bienvenida
-                mostrarSeccion('welcome-screen');
+                document.getElementById('auth-section').style.display = 'none';
+                document.getElementById('welcome-screen').style.display = 'block';
 
-                try {
-                    // Obtener datos de Discord
-                    const resp = await fetch('https://discord.com/api/users/@me', {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-                    const user = await resp.json();
-
-                    // Aplicar datos a tu diseño
-                    document.getElementById('user-tag').textContent = user.username.toUpperCase();
-                    
-                    const lang = document.getElementById('lang-select').value;
-                    const welcomePrefix = textos[lang].hola;
-                    document.querySelector('.welcome-text').innerHTML = `${welcomePrefix}, <span id="user-tag">${user.username.toUpperCase()}</span>`;
-
-                    // Cargar Avatar
-                    const avatarImg = document.getElementById('user-avatar');
-                    if (user.avatar) {
-                        avatarImg.src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256`;
-                    } else {
-                        // Avatar por defecto si no tiene
-                        avatarImg.src = "https://cdn.discordapp.com/embed/avatars/0.png";
-                    }
-
-                } catch (error) {
-                    console.error("Error obteniendo datos de Discord:", error);
-                    // Si falla, volver al login
-                    mostrarSeccion('auth-section');
-                }
-            } else {
-                // No hay token -> Mostrar Login
-                mostrarSeccion('auth-section');
+                const resp = await fetch('https://discord.com/api/users/@me', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const user = await resp.json();
+                document.getElementById('user-tag').textContent = user.username.toUpperCase();
+                document.getElementById('user-avatar').src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256`;
             }
         };
     </script>
