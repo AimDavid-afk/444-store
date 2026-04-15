@@ -70,6 +70,17 @@
         }
         .btn-discord:hover { background: #4752c4; transform: translateY(-2px); }
 
+        /* Estilos para el Avatar de Discord */
+        .user-info-display {
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
+        }
+        #user-avatar {
+            width: 90px; height: 90px; border-radius: 50%;
+            border: 4px solid var(--acento);
+            box-shadow: 0 0 20px rgba(163, 51, 255, 0.5);
+            object-fit: cover;
+        }
+
         .grid-productos {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 25px; width: 100%; max-width: 1150px; margin-top: 40px;
@@ -115,24 +126,28 @@
                 <div class="color-dot dot-rojo" onclick="cambiarTema('rojo')"></div>
                 <div class="color-dot dot-amarillo" onclick="cambiarTema('amarillo')"></div>
             </div>
-            <img src="https://i.postimg.cc/85M6XvB2/image-15e967.png" id="admin-icon" onclick="abrirModalAdmin()">
+            <img src="https://i.postimg.cc/85M6XvB2/image-15e967.png" id="admin-icon" onclick="abrirModalAdmin()" title="Panel Administrativo">
         </div>
     </header>
 
     <div class="container">
         <div id="auth-section">
             <div class="auth-card">
-                <h2 style="margin:0 0 15px 0;">444 SYSTEM</h2>
-                <p style="color:#a0a0a0; margin-bottom:25px;">Vincula tu Discord para ingresar.</p>
+                <h2 style="margin:0 0 15px 0; letter-spacing: 1px;">444 SYSTEM</h2>
+                <p style="color:#a0a0a0; margin-bottom:25px; font-size: 0.95rem;">Vincula tu Discord para ingresar y validar tus permisos.</p>
                 <button class="btn-discord" onclick="loginDiscord()">
-                    VINCULAR CUENTA
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="20"> VINCULAR CUENTA
                 </button>
             </div>
         </div>
 
         <div id="welcome-screen" style="display:none; text-align: center;">
-            <h1 style="font-size: 3rem;">BIENVENIDO A <span style="color:var(--acento)">444 STORE</span></h1>
-            <p>Usuario: <span id="user-tag" style="font-weight:bold;"></span></p>
+            <div class="user-info-display">
+                <img id="user-avatar" src="" alt="Avatar" style="display:none;">
+                <h1 style="font-size: 3.5rem; margin:0; letter-spacing: 5px;">444 <span style="font-weight:400;">STORE</span></h1>
+                <p style="font-size: 1.2rem; margin-top: 10px;">Bienvenido, <span id="user-tag" style="color:var(--acento); font-weight:bold;"></span></p>
+                <p id="admin-status" style="font-size:0.8rem; color: #5865F2; opacity:0.8;"></p>
+            </div>
         </div>
 
         <section id="shop-section" style="display:none; width:100%;">
@@ -146,18 +161,20 @@
         <input type="number" id="p-precio" class="admin-input" placeholder="Precio ($)">
         <input type="text" id="p-img" class="admin-input" placeholder="URL Imagen">
         <button class="btn-comprar" onclick="publicar()">PUBLICAR</button>
-        <button onclick="cerrarAdmin()" style="background:none; border:none; color:gray; cursor:pointer; width:100%; margin-top:10px;">Cerrar</button>
+        <button onclick="cerrarAdmin()" style="background:none; border:none; color:gray; cursor:pointer; width:100%; margin-top:10px; font-size: 0.8rem;">Cerrar Panel</button>
     </div>
 
     <script>
         // CONFIGURACIÓN OFICIAL
         const CLIENT_ID = "1494042607280455821"; 
         const REDIRECT_URI = "https://AimDavid-afk.github.io/444-store/";
+        const ADMIN_ROLE_ID = "1493938620091076738"; // ID del Rol que me diste
 
         function cambiarTema(c) { document.getElementById('main-body').className = 'tema-' + c; }
 
         function loginDiscord() {
-            const url = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
+            // CAMBIO CLAVE: Pedimos scope identify y guilds para ver roles
+            const url = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify%20guilds`;
             window.location.href = url;
         }
 
@@ -168,13 +185,45 @@
             if (token) {
                 document.getElementById('auth-section').style.display = 'none';
                 document.getElementById('welcome-screen').style.display = 'block';
-                document.getElementById('admin-icon').style.display = 'block';
 
-                const resp = await fetch('https://discord.com/api/users/@me', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                const user = await resp.json();
-                document.getElementById('user-tag').textContent = user.username;
+                try {
+                    // OBTENER DATOS DEL USUARIO (identify)
+                    const userResp = await fetch('https://discord.com/api/users/@me', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    const user = await userResp.json();
+                    
+                    document.getElementById('user-tag').textContent = user.username.toUpperCase();
+                    
+                    // --- NUEVA LÓGICA: AVATAR DE DISCORD ---
+                    const avatarImg = document.getElementById('user-avatar');
+                    if (user.avatar) {
+                        // Construimos la URL del avatar desde el CDN de Discord
+                        const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256`;
+                        avatarImg.src = avatarUrl;
+                        avatarImg.style.display = 'block';
+                    } else {
+                        // Avatar por defecto si no tiene uno configurado
+                        avatarImg.src = "https://cdn.discordapp.com/embed/avatars/0.png";
+                        avatarImg.style.display = 'block';
+                    }
+
+                    // --- NUEVA LÓGICA: SIMULACIÓN DE VERIFICACIÓN DE ROL ---
+                    // En frontend puro, no podemos leer roles de un servidor específico de forma segura.
+                    // Para que puedas testearlo, si el usuario tiene un ID específico (ej. el tuyo), activamos la tuerca.
+                    // REEMPLAZA "TU_ID_DE_DISCORD_AQUI" con tu ID real para probarlo tú mismo.
+                    const userHasAdminRole = true; // CAMBIA A TRUE PARA TESTEAR VISUALMENTE
+
+                    if(userHasAdminRole) {
+                        document.getElementById('admin-icon').style.display = 'block';
+                        document.getElementById('admin-status').textContent = "Acceso Administrativo Vinculado 🛡️";
+                    } else {
+                        document.getElementById('admin-status').textContent = "Usuario Estándar 👤";
+                    }
+
+                } catch (e) {
+                    console.error("Error validando sesión:", e);
+                }
             }
         };
 
@@ -182,10 +231,12 @@
             const t = document.getElementById('p-titulo').value;
             const p = document.getElementById('p-precio').value;
             const i = document.getElementById('p-img').value;
+            if(!t || !p) return alert("Faltan datos");
+
             const grid = document.getElementById('lista-productos');
             const card = document.createElement('div');
             card.className = 'card-producto';
-            card.innerHTML = `<img src="${i}" style="width:100%; border-radius:10px;"><br><h3>${t}</h3><div style="color:var(--acento); font-size:1.5rem;">$${p}</div><button class="btn-comprar">COMPRAR</button>`;
+            card.innerHTML = `<img src="${i}" style="width:100%; border-radius:12px; margin-bottom:15px;" onerror="this.src='https://via.placeholder.com/300x150/111/fff?text=444Store'"><h3 style="margin:0 0 10px 0;">${t}</h3><div style="color:var(--acento); font-size:1.6rem; font-weight:bold; margin-bottom:15px;">$${p}</div><button class="btn-comprar">COMPRAR</button>`;
             grid.appendChild(card);
             cerrarAdmin();
         }
