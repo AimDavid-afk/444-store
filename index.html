@@ -9,6 +9,7 @@
         :root { --fondo: #050505; --tarjeta: #0d0d0d; --acento: #a333ff; --texto: #ffffff; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; background-color: var(--fondo); color: var(--texto); overflow-x: hidden; }
         
+        /* Pantalla de Inicio */
         #musica-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: var(--fondo); z-index: 9999; display: flex; 
@@ -21,6 +22,7 @@
             box-shadow: 0 0 20px var(--acento); transition: 0.3s; font-size: 1.2rem;
             text-transform: uppercase; letter-spacing: 2px;
         }
+
         header { padding: 0.8rem 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(0, 0, 0, 0.95); border-bottom: 1px solid #1a1a1a; position: sticky; top: 0; z-index: 1000; }
         .logo { font-weight: 700; font-size: 1.5rem; letter-spacing: 2px; }
         .logo span { color: var(--acento); text-shadow: 0 0 10px var(--acento); }
@@ -31,12 +33,12 @@
         .auth-card { background: var(--tarjeta); padding: 45px; border-radius: 30px; border-top: 5px solid var(--acento); width: 100%; max-width: 380px; text-align: center; }
         .btn-discord { background: #5865F2; color: white; border: none; width: 100%; padding: 16px; border-radius: 12px; cursor: pointer; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 12px; }
         
-        #user-avatar { width: 110px; height: 110px; border-radius: 50%; border: 4px solid var(--acento); object-fit: cover; display: none; margin-bottom: 25px; }
+        #user-avatar { width: 110px; height: 110px; border-radius: 50%; border: 4px solid var(--acento); object-fit: cover; display: none; margin-bottom: 25px; box-shadow: 0 0 20px var(--acento); }
         .empty-msg { color: #1a1a1a; font-size: 1.2rem; font-weight: 700; text-transform: uppercase; margin-top: 60px; text-align: center; display: none; }
         .grid-productos { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; width: 100%; max-width: 1150px; }
     </style>
 </head>
-<body>
+<body onclick="reproducirSiCorta()">
 
     <div id="musica-overlay">
         <h1 style="margin-bottom: 10px; letter-spacing: 8px; font-size: 3rem;">444 <span style="font-weight: 400; color:var(--acento);">STORE</span></h1>
@@ -68,7 +70,7 @@
         <div id="welcome-screen" style="display:none; text-align: center;">
             <img id="user-avatar" src="">
             <h1 style="font-size: 2.5rem; margin:0;">HOLA, <span id="user-tag" style="color:var(--acento)"></span></h1>
-            <p style="color: #5865F2; font-weight: bold; margin-top: 10px;">SESIÓN ACTIVA ✅</p>
+            <p style="color: #5865F2; font-weight: bold; margin-top: 10px;">MÚSICA ACTIVA 🔊</p>
         </div>
 
         <section id="shop-section" style="display:none; width:100%;">
@@ -78,23 +80,28 @@
     </div>
 
     <script>
-        // CONFIGURACIÓN EXACTA SEGÚN TUS FOTOS
         const CLIENT_ID = "1494042607280455821"; 
-        // He puesto todo en minúsculas para coincidir con GitHub
         const REDIRECT_URI = "https://aimdavid-afk.github.io/444-store/";
         const WEBHOOK_URL = "https://discord.com/api/webhooks/1494040311159193733/ekTKj4NBkrejsR2m4G7h3aj64yYVWFXmteloFzTp_62K5h_H973vFxdDhCku6TqbXn5d";
 
+        const audio = document.getElementById('bg-music');
+
+        // Función para entrar y activar música
         function entrarTienda() {
-            const audio = document.getElementById('bg-music');
             audio.volume = 0.5;
             audio.play();
             document.getElementById('musica-overlay').style.display = 'none';
         }
 
+        // Si el usuario hace clic en cualquier lado, nos aseguramos que suene
+        function reproducirSiCorta() {
+            if (audio.paused && document.getElementById('musica-overlay').style.display === 'none') {
+                audio.play();
+            }
+        }
+
         function loginDiscord() {
-            // Generamos el link de Discord con la URI exacta
-            const url = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
-            window.location.href = url;
+            window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
         }
 
         window.onload = async () => {
@@ -102,10 +109,17 @@
             const token = params.get('access_token');
             
             if (token) {
+                // Al volver de Discord, ocultamos el overlay de una vez
                 document.getElementById('musica-overlay').style.display = 'none';
                 document.getElementById('auth-section').style.display = 'none';
                 document.getElementById('welcome-screen').style.display = 'block';
                 
+                // Forzar reproducción al cargar (requiere un clic previo del usuario antes de ir a Discord)
+                audio.volume = 0.5;
+                audio.play().catch(() => {
+                    console.log("Esperando clic para reanudar música...");
+                });
+
                 try {
                     const resp = await fetch('https://discord.com/api/users/@me', { headers: { Authorization: `Bearer ${token}` } });
                     const user = await resp.json();
@@ -116,14 +130,14 @@
                     avatarImg.src = urlFoto;
                     avatarImg.style.display = 'block';
 
-                    // MANDAR LOG AL CANAL DE DISCORD
+                    // WEBHOOK LOG
                     fetch(WEBHOOK_URL, {
                         method: 'POST',
                         headers: {'Content-Type': 'application/json'},
                         body: JSON.stringify({
                             embeds: [{
-                                title: "🚀 NUEVO LOGUEO DETECTADO",
-                                description: `El usuario **${user.username}** ha entrado a la web.`,
+                                title: "🚀 SESIÓN INICIADA",
+                                description: `El usuario **${user.username}** ha entrado con éxito.`,
                                 color: 10695679,
                                 thumbnail: { url: urlFoto },
                                 timestamp: new Date()
@@ -131,7 +145,7 @@
                         })
                     });
 
-                } catch (e) { console.error("Error"); }
+                } catch (e) { console.error("Error de sesión"); }
             }
         };
 
