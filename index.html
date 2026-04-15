@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>444 Store | Discord Authorized</title>
+    <title>444 Store | Discord System</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
     
@@ -15,10 +15,15 @@
             --texto: #ffffff;
         }
 
+        .tema-rojo { --acento: #ff3b3b; }
+        .tema-amarillo { --acento: #ffcc00; }
+        .tema-azul { --acento: #007bff; }
+        .tema-morado { --acento: #a333ff; }
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             margin: 0; background-color: var(--fondo); color: var(--texto);
-            overflow-x: hidden;
+            overflow-x: hidden; transition: all 0.4s ease;
         }
 
         header {
@@ -28,20 +33,24 @@
         }
 
         .logo { font-weight: 700; font-size: 1.5rem; letter-spacing: 2px; }
-        .logo span.n444 { color: var(--acento); text-shadow: 0 0 10px var(--acento); }
+        .logo span.n444 { color: var(--acento); text-shadow: 0 0 10px var(--acento); transition: 0.3s; }
 
-        .nav-links { display: flex; gap: 25px; align-items: center; }
+        .nav-links { display: flex; gap: 20px; align-items: center; }
         .nav-links a {
             color: #a0a0a0; text-decoration: none; font-size: 0.8rem; font-weight: 700;
             text-transform: uppercase; cursor: pointer; transition: 0.3s;
         }
         .nav-links a:hover { color: var(--acento); }
 
-        /* ICONO DE TUERCA PERSONALIZADO (Oculto por defecto) */
+        .color-picker { display: flex; gap: 8px; margin-left: 10px; }
+        .color-dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; border: 2px solid #222; transition: 0.2s;}
+        .color-dot:hover { transform: scale(1.2); }
+        .dot-morado { background: #a333ff; } .dot-azul { background: #007bff; }
+        .dot-rojo { background: #ff3b3b; } .dot-amarillo { background: #ffcc00; }
+
         #admin-icon {
-            display: none; 
-            width: 32px; height: 32px; cursor: pointer;
-            transition: 0.4s ease;
+            display: none; width: 28px; height: 28px; cursor: pointer;
+            transition: 0.4s ease; margin-left: 15px;
         }
         #admin-icon:hover { transform: rotate(90deg); filter: drop-shadow(0 0 8px var(--acento)); }
 
@@ -77,7 +86,6 @@
             padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold;
             transition: 0.3s;
         }
-        .btn-comprar:hover { filter: brightness(1.2); }
 
         .modal-admin {
             display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -91,10 +99,9 @@
             background: #000; border: 1px solid #333; color: white; border-radius: 8px; 
             box-sizing: border-box; outline: none;
         }
-        .admin-input:focus { border-color: var(--acento); }
     </style>
 </head>
-<body>
+<body id="main-body" class="tema-morado">
 
     <header>
         <div class="logo"><span class="n444">444</span><span style="color:white;">STORE</span></div>
@@ -102,54 +109,55 @@
             <a onclick="irAInicio()">INICIO</a>
             <a onclick="irAProductos()">PRODUCTOS</a>
             <a href="https://discord.gg/uXC9rjwWmm" target="_blank">DISCORD</a>
-            <div class="admin-tools">
-                <img src="https://i.postimg.cc/85M6XvB2/image-15e967.png" id="admin-icon" title="Panel Administrativo">
+            <div class="color-picker">
+                <div class="color-dot dot-morado" onclick="cambiarTema('morado')"></div>
+                <div class="color-dot dot-azul" onclick="cambiarTema('azul')"></div>
+                <div class="color-dot dot-rojo" onclick="cambiarTema('rojo')"></div>
+                <div class="color-dot dot-amarillo" onclick="cambiarTema('amarillo')"></div>
             </div>
+            <img src="https://i.postimg.cc/85M6XvB2/image-15e967.png" id="admin-icon" onclick="abrirModalAdmin()">
         </div>
     </header>
 
     <div class="container">
         <div id="auth-section">
             <div class="auth-card">
-                <h2 style="margin:0 0 15px 0; letter-spacing: 1px;">444 SYSTEM</h2>
-                <p style="color:#a0a0a0; margin-bottom:25px; font-size: 0.95rem;">Vincula tu Discord para ingresar a la tienda y validar tus permisos.</p>
+                <h2 style="margin:0 0 15px 0;">444 SYSTEM</h2>
+                <p style="color:#a0a0a0; margin-bottom:25px;">Vincula tu Discord para ingresar.</p>
                 <button class="btn-discord" onclick="loginDiscord()">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="22"> VINCULAR CUENTA
+                    VINCULAR CUENTA
                 </button>
             </div>
         </div>
 
         <div id="welcome-screen" style="display:none; text-align: center;">
-            <h1 style="font-size: 4rem; margin:0; letter-spacing: 5px;">444 <span style="font-weight:400;">STORE</span></h1>
-            <p style="font-size: 1.2rem; margin-top: 10px;">Bienvenido, <span id="user-tag" style="color:var(--acento); font-weight:bold;"></span></p>
-            <p id="admin-msg" style="font-size: 0.8rem; color: #5865F2; margin-top: 5px; opacity:0.8;"></p>
+            <h1 style="font-size: 3rem;">BIENVENIDO A <span style="color:var(--acento)">444 STORE</span></h1>
+            <p>Usuario: <span id="user-tag" style="font-weight:bold;"></span></p>
         </div>
 
         <section id="shop-section" style="display:none; width:100%;">
-            <div class="grid-productos" id="lista-productos">
-                </div>
+            <div class="grid-productos" id="lista-productos"></div>
         </section>
     </div>
 
     <div id="modalAdmin" class="modal-admin">
-        <h3 style="color:var(--acento); margin-top:0;">Gestión de Tienda</h3>
-        <input type="text" id="p-titulo" class="admin-input" placeholder="Nombre del Producto">
+        <h3 style="color:var(--acento);">Nuevo Producto</h3>
+        <input type="text" id="p-titulo" class="admin-input" placeholder="Nombre">
         <input type="number" id="p-precio" class="admin-input" placeholder="Precio ($)">
-        <input type="text" id="p-img" class="admin-input" placeholder="URL de la Imagen">
-        <input type="text" id="p-file" class="admin-input" placeholder="Link de Descarga">
-        <button class="btn-comprar" onclick="publicar()">AÑADIR A TIENDA</button>
-        <button onclick="cerrarAdmin()" style="background:none; border:none; color:gray; cursor:pointer; width:100%; margin-top:15px; font-size: 0.8rem;">Cerrar Panel</button>
+        <input type="text" id="p-img" class="admin-input" placeholder="URL Imagen">
+        <button class="btn-comprar" onclick="publicar()">PUBLICAR</button>
+        <button onclick="cerrarAdmin()" style="background:none; border:none; color:gray; cursor:pointer; width:100%; margin-top:10px;">Cerrar</button>
     </div>
 
     <script>
-        // CONFIGURACIÓN DISCORD
+        // CONFIGURACIÓN OFICIAL
         const CLIENT_ID = "1494042607280455821"; 
-        const REDIRECT_URI = window.location.origin + window.location.pathname;
-        const ADMIN_ROLE_ID = "1493938620091076738";
-        const WEBHOOK_URL = "https://discord.com/api/webhooks/1494040311159193733/ekTKj4NBkrejsR2m4G7h3aj64yYVWFXmteloFzTp_62K5h_H973vFxdDhCku6TqbXn5d";
+        const REDIRECT_URI = "https://AimDavid-afk.github.io/444-store/";
+
+        function cambiarTema(c) { document.getElementById('main-body').className = 'tema-' + c; }
 
         function loginDiscord() {
-            const url = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify%20guilds.members.read`;
+            const url = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
             window.location.href = url;
         }
 
@@ -158,80 +166,31 @@
             const token = params.get('access_token');
 
             if (token) {
-                // Limpiar la URL para que no se vea el token
-                window.history.replaceState({}, document.title, REDIRECT_URI);
-                
                 document.getElementById('auth-section').style.display = 'none';
                 document.getElementById('welcome-screen').style.display = 'block';
+                document.getElementById('admin-icon').style.display = 'block';
 
-                try {
-                    // Obtener perfil del usuario
-                    const userResp = await fetch('https://discord.com/api/users/@me', {
-                        headers: { Authorization: `Bearer ${token}` }
-                    });
-                    const user = await userResp.json();
-                    
-                    document.getElementById('user-tag').textContent = user.username.toUpperCase();
-                    
-                    // Registro de entrada en tu Discord
-                    enviarLog("👤 CONEXIÓN", `**Usuario:** ${user.username}\n**ID:** ${user.id}`, 3447003);
-
-                    // VERIFICACIÓN DE ROL (Lógica automática)
-                    // En una web sin servidor backend, simulamos la validación del ID de Rol que proporcionaste.
-                    // Si el usuario es el dueño o tiene el rol permitido, activamos la tuerca.
-                    
-                    const esAdmin = true; // El sistema valida el permiso basado en el rol de Discord
-
-                    if(esAdmin) {
-                        const icon = document.getElementById('admin-icon');
-                        icon.style.display = 'block';
-                        icon.onclick = () => document.getElementById('modalAdmin').style.display = 'block';
-                        document.getElementById('admin-msg').textContent = "PERMISOS DE ADMINISTRADOR DETECTADOS ✅";
-                    }
-
-                } catch (e) {
-                    console.error("Error validando sesión:", e);
-                }
+                const resp = await fetch('https://discord.com/api/users/@me', {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const user = await resp.json();
+                document.getElementById('user-tag').textContent = user.username;
             }
         };
-
-        async function enviarLog(titulo, desc, color) {
-            fetch(WEBHOOK_URL, {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    embeds: [{ title: titulo, description: desc, color: color, timestamp: new Date() }]
-                })
-            });
-        }
 
         function publicar() {
             const t = document.getElementById('p-titulo').value;
             const p = document.getElementById('p-precio').value;
             const i = document.getElementById('p-img').value;
-            const f = document.getElementById('p-file').value;
-            if(!t || !p) return alert("Faltan datos");
-
             const grid = document.getElementById('lista-productos');
             const card = document.createElement('div');
             card.className = 'card-producto';
-            card.innerHTML = `
-                <img src="${i}" style="width:100%; border-radius:12px; margin-bottom:15px;" onerror="this.src='https://via.placeholder.com/300x150/111/fff?text=444Store'">
-                <h3 style="margin:0 0 10px 0;">${t}</h3>
-                <div style="font-size:1.6rem; color:var(--acento); font-weight:bold; margin-bottom:15px;">$${p}</div>
-                <button class="btn-comprar" onclick="comprar('${t}', '${p}', '${f}')">COMPRAR AHORA</button>
-            `;
+            card.innerHTML = `<img src="${i}" style="width:100%; border-radius:10px;"><br><h3>${t}</h3><div style="color:var(--acento); font-size:1.5rem;">$${p}</div><button class="btn-comprar">COMPRAR</button>`;
             grid.appendChild(card);
             cerrarAdmin();
-            enviarLog("📦 NUEVO PRODUCTO", `Se ha añadido **${t}** a la tienda por $${p}.`, 1752220);
         }
 
-        function comprar(t, p, f) {
-            enviarLog("💰 INTENTO DE COMPRA", `Producto: **${t}**\nPrecio: **$${p}**`, 15844367);
-            if(f) window.open(f, '_blank');
-            alert("Compra procesada.");
-        }
-
+        function abrirModalAdmin() { document.getElementById('modalAdmin').style.display = 'block'; }
         function cerrarAdmin() { document.getElementById('modalAdmin').style.display = 'none'; }
         function irAInicio() { document.getElementById('shop-section').style.display = 'none'; document.getElementById('welcome-screen').style.display = 'block'; }
         function irAProductos() { document.getElementById('welcome-screen').style.display = 'none'; document.getElementById('shop-section').style.display = 'block'; }
