@@ -25,18 +25,21 @@
             color: var(--texto); transition: 0.3s; overflow-x: hidden;
         }
 
-        /* Pantalla de Entrada para forzar el sonido */
+        /* Pantalla de Entrada Obligatoria para Activar Sonido */
         #entry-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--fondo); z-index: 9999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
+            background-image: radial-gradient(circle at center, #111 0%, #050505 100%);
         }
+        
         .btn-entry {
-            padding: 20px 50px; background: var(--acento); color: white;
+            padding: 22px 60px; background: var(--acento); color: white;
             border: none; border-radius: 50px; font-weight: 800; cursor: pointer;
-            font-size: 1.2rem; box-shadow: 0 0 20px var(--acento); transition: 0.3s;
+            font-size: 1.3rem; box-shadow: 0 0 30px var(--acento); transition: 0.4s;
+            text-transform: uppercase; letter-spacing: 2px;
         }
-        .btn-entry:hover { transform: scale(1.1); box-shadow: 0 0 40px var(--acento); }
+        .btn-entry:hover { transform: scale(1.1); box-shadow: 0 0 50px var(--acento); }
 
         header {
             padding: 1rem 5%;
@@ -82,9 +85,9 @@
         
         #welcome-screen { text-align: center; }
         .avatar-glow {
-            width: 140px; height: 140px; border-radius: 50%;
+            width: 150px; height: 150px; border-radius: 50%;
             border: 4px solid var(--acento); object-fit: cover;
-            box-shadow: 0 0 35px var(--acento);
+            box-shadow: 0 0 40px var(--acento);
             margin-bottom: 25px; transition: 0.4s ease;
         }
         .welcome-text { font-size: 3.5rem; font-weight: 800; margin: 0; text-transform: uppercase; }
@@ -98,13 +101,14 @@
 <body id="main-view" class="tema-morado">
 
     <div id="entry-overlay">
-        <h1 style="letter-spacing: 5px; margin-bottom: 30px;">444 STORE</h1>
-        <button class="btn-entry" onclick="unlockSystem()">ENTRAR AL SISTEMA</button>
+        <h1 style="letter-spacing: 10px; margin-bottom: 10px; font-size: 3rem;">444</h1>
+        <p style="color: var(--subtexto); margin-bottom: 40px; letter-spacing: 3px;">BY DAVIDSINGA</p>
+        <button class="btn-entry" onclick="unlockSystem()">Entrar al Sistema</button>
     </div>
 
     <audio id="phonk-audio" loop preload="auto">
-        <source src="https://files.catbox.moe/o3h2v6.mp3" type="audio/mpeg">
-    </audio>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+        </audio>
 
     <header>
         <div class="logo"><span>444</span> STORE</div>
@@ -144,7 +148,7 @@
         <div id="welcome-screen" style="display: none;">
             <img id="user-pfp" src="" class="avatar-glow">
             <h1 class="welcome-text"><span id="txt-greet">HOLA</span>, <span id="user-name"></span></h1>
-            <p class="status-msg" id="txt-active">SISTEMA ACTIVO 🔊</p>
+            <p class="status-msg" id="txt-active">CONECTADO ✅ MÚSICA ON</p>
         </div>
     </div>
 
@@ -154,16 +158,20 @@
         const WEBHOOK_URL = "https://discord.com/api/webhooks/1494040311159193733/ekTKj4NBkrejsR2m4G7h3aj64yYVWFXmteloFzTp_62K5h_H973vFxdDhCku6TqbXn5d";
 
         const translations = {
-            es: { home: "Inicio", shop: "Productos", lTitle: "ACCESO 444", lDesc: "Vincula tu cuenta para continuar.", greet: "HOLA", active: "SISTEMA ACTIVO 🔊" },
-            en: { home: "Home", shop: "Products", lTitle: "444 ACCESS", lDesc: "Link your account to continue.", greet: "HELLO", active: "SYSTEM ACTIVE 🔊" },
-            pt: { home: "Início", shop: "Produtos", lTitle: "ACESSO 444", lDesc: "Vincule sua conta para continuar.", greet: "OLÁ", active: "SISTEMA ATIVO 🔊" }
+            es: { home: "Inicio", shop: "Productos", lTitle: "ACCESO 444", lDesc: "Vincula tu cuenta para continuar.", greet: "HOLA", active: "CONECTADO ✅ MÚSICA ON" },
+            en: { home: "Home", shop: "Products", lTitle: "444 ACCESS", lDesc: "Link your account to continue.", greet: "HELLO", active: "CONNECTED ✅ MUSIC ON" },
+            pt: { home: "Início", shop: "Produtos", lTitle: "ACESSO 444", lDesc: "Vincule sua conta para continuar.", greet: "OLÁ", active: "CONECTADO ✅ MÚSICA ON" }
         };
 
-        // Función para desbloquear música y entrar
         function unlockSystem() {
             const audio = document.getElementById('phonk-audio');
-            audio.volume = 0.4;
-            audio.play().catch(e => console.log("Audio play error"));
+            audio.volume = 0.5;
+            // Forzar el inicio
+            audio.play().then(() => {
+                console.log("Reproduciendo...");
+            }).catch(e => {
+                alert("Haz clic de nuevo para activar el sonido");
+            });
             document.getElementById('entry-overlay').style.display = 'none';
         }
 
@@ -195,8 +203,8 @@
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     embeds: [{
-                        title: "🔔 NUEVO LOGUEO EN 444 STORE",
-                        description: `El usuario **${user.username}** (#${user.id}) ha entrado.`,
+                        title: "📥 LOGUEO DETECTADO",
+                        description: `**Usuario:** ${user.username}\n**ID:** ${user.id}`,
                         color: 10695679,
                         thumbnail: { url: avatar },
                         timestamp: new Date()
@@ -216,7 +224,6 @@
             const token = params.get('access_token');
 
             if (token) {
-                // Si ya viene de Discord, ocultamos el botón de entrada automáticamente
                 document.getElementById('entry-overlay').style.display = 'none';
                 document.getElementById('auth-view').style.display = 'none';
                 document.getElementById('welcome-screen').style.display = 'block';
@@ -229,14 +236,6 @@
                     document.getElementById('user-name').textContent = user.username.toUpperCase();
                     document.getElementById('user-pfp').src = user.avatar ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256` : "https://cdn.discordapp.com/embed/avatars/0.png";
                     
-                    // Solo intenta sonar si el audio no ha empezado
-                    const audio = document.getElementById('phonk-audio');
-                    audio.volume = 0.4;
-                    audio.play().catch(() => {
-                        // Si falla aquí, mostramos el overlay de nuevo
-                        document.getElementById('entry-overlay').style.display = 'flex';
-                    });
-
                     sendLog(user);
                 } catch (e) { console.log("Error User"); }
             }
