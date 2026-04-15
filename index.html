@@ -15,15 +15,15 @@
             --texto: #ffffff;
         }
 
+        .tema-morado { --acento: #a333ff; }
+        .tema-azul { --acento: #007bff; }
         .tema-rojo { --acento: #ff3b3b; }
         .tema-amarillo { --acento: #ffcc00; }
-        .tema-azul { --acento: #007bff; }
-        .tema-morado { --acento: #a333ff; }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             margin: 0; background-color: var(--fondo); color: var(--texto);
-            overflow-x: hidden; transition: all 0.4s ease;
+            transition: 0.4s ease;
         }
 
         header {
@@ -33,148 +33,79 @@
         }
 
         .logo { font-weight: 700; font-size: 1.5rem; letter-spacing: 2px; }
-        .logo span.n444 { color: var(--acento); text-shadow: 0 0 10px var(--acento); transition: 0.3s; }
+        .logo span { color: var(--acento); text-shadow: 0 0 10px var(--acento); }
 
         .nav-links { display: flex; gap: 20px; align-items: center; }
-        .nav-links a {
-            color: #a0a0a0; text-decoration: none; font-size: 0.8rem; font-weight: 700;
-            text-transform: uppercase; cursor: pointer; transition: 0.3s;
-        }
-        .nav-links a:hover { color: var(--acento); }
+        .nav-links a { color: #a0a0a0; text-decoration: none; font-size: 0.8rem; font-weight: 700; cursor: pointer; }
 
-        .color-picker { display: flex; gap: 8px; margin-left: 10px; }
-        .color-dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; border: 2px solid #222; transition: 0.2s;}
-        .color-dot:hover { transform: scale(1.2); }
-        .dot-morado { background: #a333ff; } .dot-azul { background: #007bff; }
-        .dot-rojo { background: #ff3b3b; } .dot-amarillo { background: #ffcc00; }
-
-        #admin-icon {
-            display: none; width: 28px; height: 28px; cursor: pointer;
-            transition: 0.4s ease; margin-left: 15px;
+        /* Contenedor del Avatar */
+        .user-profile {
+            display: flex; flex-direction: column; align-items: center; gap: 15px; margin-bottom: 30px;
         }
-        #admin-icon:hover { transform: rotate(90deg); filter: drop-shadow(0 0 8px var(--acento)); }
+
+        #user-avatar {
+            width: 100px; height: 100px; border-radius: 50%;
+            border: 3px solid var(--acento);
+            box-shadow: 0 0 25px rgba(163, 51, 255, 0.4);
+            object-fit: cover; display: none; /* Se activa al loguear */
+        }
 
         .container { min-height: 85vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         
         .auth-card {
-            background: var(--tarjeta); padding: 45px; border-radius: 30px;
-            border-top: 5px solid var(--acento); width: 100%; max-width: 420px;
-            text-align: center; box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+            background: var(--tarjeta); padding: 40px; border-radius: 25px;
+            border-top: 4px solid var(--acento); width: 100%; max-width: 380px;
+            text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
 
         .btn-discord {
             background: #5865F2; color: white; border: none; width: 100%;
-            padding: 16px; border-radius: 12px; cursor: pointer; font-weight: bold;
-            display: flex; align-items: center; justify-content: center; gap: 12px;
-            font-size: 1rem; transition: 0.3s;
+            padding: 15px; border-radius: 12px; cursor: pointer; font-weight: bold;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            transition: 0.3s;
         }
         .btn-discord:hover { background: #4752c4; transform: translateY(-2px); }
 
-        /* Estilos para el Avatar de Discord */
-        .user-info-display {
-            display: flex; flex-direction: column; align-items: center; gap: 15px;
-        }
-        #user-avatar {
-            width: 90px; height: 90px; border-radius: 50%;
-            border: 4px solid var(--acento);
-            box-shadow: 0 0 20px rgba(163, 51, 255, 0.5);
-            object-fit: cover;
-        }
-
-        .grid-productos {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px; width: 100%; max-width: 1150px; margin-top: 40px;
-        }
-
-        .card-producto { 
-            background: var(--tarjeta); border-radius: 20px; padding: 20px; 
-            border: 1px solid #1a1a1a; transition: 0.3s;
-        }
-        .card-producto:hover { border-color: var(--acento); transform: translateY(-5px); }
-
-        .btn-comprar {
-            background: var(--acento); color: white; border: none; width: 100%;
-            padding: 12px; border-radius: 10px; cursor: pointer; font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .modal-admin {
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: var(--tarjeta); padding: 35px; border-radius: 25px; 
-            border: 2px solid var(--acento); z-index: 2000; width: 340px;
-            box-shadow: 0 0 100px rgba(0,0,0,0.8);
-        }
-
-        .admin-input {
-            width: 100%; padding: 12px; margin: 10px 0;
-            background: #000; border: 1px solid #333; color: white; border-radius: 8px; 
-            box-sizing: border-box; outline: none;
-        }
+        #admin-icon { display: none; width: 28px; cursor: pointer; margin-left: 15px; }
     </style>
 </head>
 <body id="main-body" class="tema-morado">
 
     <header>
-        <div class="logo"><span class="n444">444</span><span style="color:white;">STORE</span></div>
+        <div class="logo"><span>444</span> STORE</div>
         <div class="nav-links">
-            <a onclick="irAInicio()">INICIO</a>
-            <a onclick="irAProductos()">PRODUCTOS</a>
-            <a href="https://discord.gg/uXC9rjwWmm" target="_blank">DISCORD</a>
-            <div class="color-picker">
-                <div class="color-dot dot-morado" onclick="cambiarTema('morado')"></div>
-                <div class="color-dot dot-azul" onclick="cambiarTema('azul')"></div>
-                <div class="color-dot dot-rojo" onclick="cambiarTema('rojo')"></div>
-                <div class="color-dot dot-amarillo" onclick="cambiarTema('amarillo')"></div>
-            </div>
-            <img src="https://i.postimg.cc/85M6XvB2/image-15e967.png" id="admin-icon" onclick="abrirModalAdmin()" title="Panel Administrativo">
+            <a>INICIO</a> <a>PRODUCTOS</a>
+            <img src="https://i.postimg.cc/85M6XvB2/image-15e967.png" id="admin-icon" onclick="alert('Panel Admin')">
         </div>
     </header>
 
     <div class="container">
         <div id="auth-section">
             <div class="auth-card">
-                <h2 style="margin:0 0 15px 0; letter-spacing: 1px;">444 SYSTEM</h2>
-                <p style="color:#a0a0a0; margin-bottom:25px; font-size: 0.95rem;">Vincula tu Discord para ingresar y validar tus permisos.</p>
+                <h2>BIENVENIDO</h2>
+                <p style="color:gray; margin-bottom:30px;">Accede con tu cuenta de Discord</p>
                 <button class="btn-discord" onclick="loginDiscord()">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="20"> VINCULAR CUENTA
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="20">
+                    CONECTAR DISCORD
                 </button>
             </div>
         </div>
 
         <div id="welcome-screen" style="display:none; text-align: center;">
-            <div class="user-info-display">
-                <img id="user-avatar" src="" alt="Avatar" style="display:none;">
-                <h1 style="font-size: 3.5rem; margin:0; letter-spacing: 5px;">444 <span style="font-weight:400;">STORE</span></h1>
-                <p style="font-size: 1.2rem; margin-top: 10px;">Bienvenido, <span id="user-tag" style="color:var(--acento); font-weight:bold;"></span></p>
-                <p id="admin-status" style="font-size:0.8rem; color: #5865F2; opacity:0.8;"></p>
+            <div class="user-profile">
+                <img id="user-avatar" src="" alt="Avatar">
+                <h1 style="font-size: 2.5rem; margin:0;">HOLA, <span id="user-tag" style="color:var(--acento)"></span></h1>
+                <p style="color:gray;">Sesión iniciada correctamente</p>
             </div>
         </div>
-
-        <section id="shop-section" style="display:none; width:100%;">
-            <div class="grid-productos" id="lista-productos"></div>
-        </section>
-    </div>
-
-    <div id="modalAdmin" class="modal-admin">
-        <h3 style="color:var(--acento);">Nuevo Producto</h3>
-        <input type="text" id="p-titulo" class="admin-input" placeholder="Nombre">
-        <input type="number" id="p-precio" class="admin-input" placeholder="Precio ($)">
-        <input type="text" id="p-img" class="admin-input" placeholder="URL Imagen">
-        <button class="btn-comprar" onclick="publicar()">PUBLICAR</button>
-        <button onclick="cerrarAdmin()" style="background:none; border:none; color:gray; cursor:pointer; width:100%; margin-top:10px; font-size: 0.8rem;">Cerrar Panel</button>
     </div>
 
     <script>
-        // CONFIGURACIÓN OFICIAL
         const CLIENT_ID = "1494042607280455821"; 
         const REDIRECT_URI = "https://AimDavid-afk.github.io/444-store/";
-        const ADMIN_ROLE_ID = "1493938620091076738"; // ID del Rol que me diste
-
-        function cambiarTema(c) { document.getElementById('main-body').className = 'tema-' + c; }
 
         function loginDiscord() {
-            // CAMBIO CLAVE: Pedimos scope identify y guilds para ver roles
-            const url = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify%20guilds`;
+            const url = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
             window.location.href = url;
         }
 
@@ -187,64 +118,35 @@
                 document.getElementById('welcome-screen').style.display = 'block';
 
                 try {
-                    // OBTENER DATOS DEL USUARIO (identify)
-                    const userResp = await fetch('https://discord.com/api/users/@me', {
+                    // Obtenemos los datos del usuario desde Discord
+                    const resp = await fetch('https://discord.com/api/users/@me', {
                         headers: { Authorization: `Bearer ${token}` }
                     });
-                    const user = await userResp.json();
+                    const user = await resp.json();
                     
+                    // Mostramos el nombre
                     document.getElementById('user-tag').textContent = user.username.toUpperCase();
                     
-                    // --- NUEVA LÓGICA: AVATAR DE DISCORD ---
+                    // Mostramos el Avatar (Logo del usuario)
                     const avatarImg = document.getElementById('user-avatar');
                     if (user.avatar) {
-                        // Construimos la URL del avatar desde el CDN de Discord
-                        const avatarUrl = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256`;
-                        avatarImg.src = avatarUrl;
+                        const urlAvatar = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256`;
+                        avatarImg.src = urlAvatar;
                         avatarImg.style.display = 'block';
                     } else {
-                        // Avatar por defecto si no tiene uno configurado
+                        // Imagen por defecto si no tiene avatar
                         avatarImg.src = "https://cdn.discordapp.com/embed/avatars/0.png";
                         avatarImg.style.display = 'block';
                     }
 
-                    // --- NUEVA LÓGICA: SIMULACIÓN DE VERIFICACIÓN DE ROL ---
-                    // En frontend puro, no podemos leer roles de un servidor específico de forma segura.
-                    // Para que puedas testearlo, si el usuario tiene un ID específico (ej. el tuyo), activamos la tuerca.
-                    // REEMPLAZA "TU_ID_DE_DISCORD_AQUI" con tu ID real para probarlo tú mismo.
-                    const userHasAdminRole = true; // CAMBIA A TRUE PARA TESTEAR VISUALMENTE
-
-                    if(userHasAdminRole) {
-                        document.getElementById('admin-icon').style.display = 'block';
-                        document.getElementById('admin-status').textContent = "Acceso Administrativo Vinculado 🛡️";
-                    } else {
-                        document.getElementById('admin-status').textContent = "Usuario Estándar 👤";
-                    }
+                    // Mostramos la tuerca (puedes añadir lógica de roles aquí luego)
+                    document.getElementById('admin-icon').style.display = 'block';
 
                 } catch (e) {
-                    console.error("Error validando sesión:", e);
+                    console.error("Error al obtener datos:", e);
                 }
             }
         };
-
-        function publicar() {
-            const t = document.getElementById('p-titulo').value;
-            const p = document.getElementById('p-precio').value;
-            const i = document.getElementById('p-img').value;
-            if(!t || !p) return alert("Faltan datos");
-
-            const grid = document.getElementById('lista-productos');
-            const card = document.createElement('div');
-            card.className = 'card-producto';
-            card.innerHTML = `<img src="${i}" style="width:100%; border-radius:12px; margin-bottom:15px;" onerror="this.src='https://via.placeholder.com/300x150/111/fff?text=444Store'"><h3 style="margin:0 0 10px 0;">${t}</h3><div style="color:var(--acento); font-size:1.6rem; font-weight:bold; margin-bottom:15px;">$${p}</div><button class="btn-comprar">COMPRAR</button>`;
-            grid.appendChild(card);
-            cerrarAdmin();
-        }
-
-        function abrirModalAdmin() { document.getElementById('modalAdmin').style.display = 'block'; }
-        function cerrarAdmin() { document.getElementById('modalAdmin').style.display = 'none'; }
-        function irAInicio() { document.getElementById('shop-section').style.display = 'none'; document.getElementById('welcome-screen').style.display = 'block'; }
-        function irAProductos() { document.getElementById('welcome-screen').style.display = 'none'; document.getElementById('shop-section').style.display = 'block'; }
     </script>
 </body>
 </html>
