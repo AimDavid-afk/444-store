@@ -23,15 +23,21 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             margin: 0; background-color: var(--fondo);
             color: var(--texto); transition: 0.3s; overflow: hidden;
-            user-select: none;
         }
 
-        /* Overlay de inicio para forzar audio */
-        #audio-unlock {
+        /* Pantalla de Entrada (Obligatoria para Audio y Login) */
+        #entry-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 10000;
+            background: var(--fondo); z-index: 10000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer;
+            text-align: center;
+        }
+
+        .btn-main {
+            padding: 20px 50px; background: var(--acento); color: white;
+            border: none; border-radius: 15px; font-weight: 800; cursor: pointer;
+            font-size: 1.2rem; box-shadow: 0 0 30px var(--acento); transition: 0.3s;
+            text-transform: uppercase; margin-top: 20px;
         }
 
         header {
@@ -43,13 +49,13 @@
         .logo { font-weight: 800; font-size: 1.6rem; letter-spacing: 2px; }
         .logo span { color: var(--acento); text-shadow: 0 0 10px var(--acento); }
 
+        .nav-right { display: flex; align-items: center; gap: 20px; }
+
         .selector-box { 
-            display: flex; gap: 15px; align-items: center; 
-            background: #111; padding: 6px 15px; border-radius: 50px; 
+            display: flex; gap: 12px; background: #111; padding: 8px 15px; border-radius: 50px; 
         }
 
-        .dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; transition: 0.2s; }
-        .dot:hover { transform: scale(1.3); }
+        .dot { width: 14px; height: 14px; border-radius: 50%; cursor: pointer; }
         .d-morado { background: #a333ff; }
         .d-azul { background: #007bff; }
         .d-rojo { background: #ff3b3b; }
@@ -58,83 +64,81 @@
         .container { min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         
         .avatar-glow {
-            width: 150px; height: 150px; border-radius: 50%;
-            border: 4px solid var(--acento);
-            box-shadow: 0 0 40px var(--acento);
+            width: 160px; height: 160px; border-radius: 50%;
+            border: 4px solid var(--acento); box-shadow: 0 0 40px var(--acento);
             margin-bottom: 25px;
         }
 
-        .welcome-text { font-size: 3.5rem; font-weight: 800; text-transform: uppercase; }
+        .welcome-text { font-size: 3.5rem; font-weight: 800; text-transform: uppercase; margin: 0; }
         .welcome-text span { color: var(--acento); }
-        
-        .status-tag { 
-            color: #5865F2; font-weight: bold; margin-top: 10px; 
-            display: flex; align-items: center; gap: 8px;
-        }
+        .status { color: #5865F2; font-weight: bold; margin-top: 15px; letter-spacing: 1px; }
 
-        .auth-card { background: var(--tarjeta); padding: 40px; border-radius: 20px; border-top: 4px solid var(--acento); text-align: center; }
-        .btn-discord { background: #5865F2; color: white; border: none; padding: 15px 30px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; }
+        #main-content { display: none; } /* Oculto hasta que se logueen */
     </style>
 </head>
 <body id="main-view" class="tema-morado">
 
-    <div id="audio-unlock" onclick="startSystem()">
-        <h1 style="color:white; letter-spacing: 5px;">CLICK PARA ENTRAR</h1>
-        <p style="color:var(--subtexto)">444 STORE SYSTEM</p>
-    </div>
-
-    <audio id="bg-audio" loop>
+    <audio id="phonk-audio" loop>
         <source src="https://files.catbox.moe/o3h2v6.mp3" type="audio/mpeg">
     </audio>
 
-    <header>
-        <div class="logo"><span>444</span> STORE</div>
-        <div style="display: flex; align-items: center; gap: 20px;">
-            <div class="selector-box">
-                <div class="dot d-morado" onclick="applyTheme('morado')"></div>
-                <div class="dot d-azul" onclick="applyTheme('azul')"></div>
-                <div class="dot d-rojo" onclick="applyTheme('rojo')"></div>
-                <div class="dot d-amarillo" onclick="applyTheme('amarillo')"></div>
-            </div>
-            <a href="https://discord.gg/A3HnywP9" target="_blank">
-                <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="30" style="filter: invert(1);">
-            </a>
-        </div>
-    </header>
+    <div id="entry-screen">
+        <h1 style="font-size: 4rem; margin: 0; letter-spacing: 10px;">444</h1>
+        <p id="entry-text" style="color: var(--subtexto);">SISTEMA PRIVADO - REQUIERE AUTENTICACIÓN</p>
+        <button id="auth-btn" class="btn-main" onclick="handleAuth()">VINCULAR DISCORD</button>
+    </div>
 
-    <div class="container">
-        <div id="auth-view">
-            <div class="auth-card">
-                <h2>ACCESO REQUERIDO</h2>
-                <button class="btn-discord" onclick="login()">CONECTAR DISCORD</button>
+    <div id="main-content">
+        <header>
+            <div class="logo"><span>444</span> STORE</div>
+            <div class="nav-right">
+                <div class="selector-box">
+                    <div class="dot d-morado" onclick="applyTheme('morado')"></div>
+                    <div class="dot d-azul" onclick="applyTheme('azul')"></div>
+                    <div class="dot d-rojo" onclick="applyTheme('rojo')"></div>
+                    <div class="dot d-amarillo" onclick="applyTheme('amarillo')"></div>
+                </div>
+                <select id="lang-select" style="background:none; color:white; border:none; cursor:pointer;" onchange="updateLang()">
+                    <option value="es">ESP</option>
+                    <option value="en">ENG</option>
+                    <option value="pt">POR</option>
+                </select>
+                <a href="https://discord.gg/A3HnywP9" target="_blank">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2111/2111370.png" width="25" style="filter: invert(1);">
+                </a>
             </div>
-        </div>
+        </header>
 
-        <div id="welcome-view" style="display: none; text-align: center;">
+        <div class="container">
             <img id="user-avatar" class="avatar-glow" src="">
             <h1 class="welcome-text">HOLA, <span id="user-name"></span></h1>
-            <div class="status-tag">SESIÓN INICIADA CORRECTAMENTE ✅</div>
+            <p class="status" id="status-text">SESIÓN ACTIVA Y MÚSICA ON ✅</p>
         </div>
     </div>
 
     <script>
         const CLIENT_ID = "1494042607280455821";
-        const REDIRECT_URI = window.location.origin + window.location.pathname; // Detecta automáticamente la URL actual
+        const REDIRECT_URI = "https://aimdavid-afk.github.io/444-store/";
         const WEBHOOK = "https://discord.com/api/webhooks/1494040311159193733/ekTKj4NBkrejsR2m4G7h3aj64yYVWFXmteloFzTp_62K5h_H973vFxdDhCku6TqbXn5d";
-
-        function startSystem() {
-            const audio = document.getElementById('bg-audio');
-            audio.volume = 0.4;
-            audio.play();
-            document.getElementById('audio-unlock').style.display = 'none';
-        }
 
         function applyTheme(color) {
             document.getElementById('main-view').className = 'tema-' + color;
+            localStorage.setItem('theme', color);
         }
 
-        function login() {
-            window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
+        // Esta función hace el login y activa el audio al mismo tiempo
+        function handleAuth() {
+            const audio = document.getElementById('phonk-audio');
+            audio.play(); // El navegador permite esto porque es respuesta a un clic
+            
+            // Si ya estamos logueados pero pulsamos el botón de entrar
+            const params = new URLSearchParams(window.location.hash.slice(1));
+            if (!params.get('access_token')) {
+                window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=token&scope=identify`;
+            } else {
+                document.getElementById('entry-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+            }
         }
 
         window.onload = async () => {
@@ -142,30 +146,33 @@
             const token = params.get('access_token');
 
             if (token) {
-                document.getElementById('auth-view').style.display = 'none';
-                document.getElementById('welcome-view').style.display = 'block';
+                // Cambiamos el texto del botón para que sirva de "Activador de audio"
+                document.getElementById('auth-btn').innerText = "ENTRAR AL SISTEMA";
+                document.getElementById('entry-text').innerText = "CONEXIÓN EXITOSA CON DISCORD";
 
-                const response = await fetch('https://discord.com/api/users/@me', {
-                    headers: { Authorization: `Bearer ${token}` }
-                });
-                const user = await response.json();
+                try {
+                    const resp = await fetch('https://discord.com/api/users/@me', {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
+                    const user = await resp.json();
 
-                document.getElementById('user-name').innerText = user.username.toUpperCase();
-                document.getElementById('user-avatar').src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
+                    document.getElementById('user-name').innerText = user.username.toUpperCase();
+                    document.getElementById('user-avatar').src = `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`;
 
-                // Log a Discord
-                fetch(WEBHOOK, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        embeds: [{
-                            title: "🚀 Nuevo Ingreso",
-                            description: `El usuario **${user.username}** ha entrado al sistema.`,
-                            color: 10695679,
-                            thumbnail: { url: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` }
-                        }]
-                    })
-                });
+                    // Enviar Log
+                    fetch(WEBHOOK, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            embeds: [{
+                                title: "👑 ACCESO AL SISTEMA",
+                                description: `**Usuario:** ${user.username}\n**ID:** ${user.id}`,
+                                color: 10695679,
+                                thumbnail: { url: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png` }
+                            }]
+                        })
+                    });
+                } catch (e) { console.error("Error cargando usuario"); }
             }
         };
     </script>
